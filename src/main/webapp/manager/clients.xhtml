@@ -1,0 +1,842 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h3>#{msgs_client.Title}</h3>
+						<div class="line-content"></div>
+						<div class="row">
+							<!-- SEARCH + ADD CLIENT ROW -->
+							<div class="col-md-6">
+									<o:form id="clientSearchForm" includeRequestParams="true">
+										<h:commandButton class='hide'
+											action="clientsSearch?faces-redirect=true&amp;includeViewParams=true" />
+
+										<div class="input-group">
+
+											<span class="input-group-addon"> <h:commandLink
+													action="clientsSearch?faces-redirect=true&amp;includeViewParams=true">
+													<i class="fa fa-search"></i>
+												</h:commandLink>
+											</span>
+
+											<h:inputText name="searchParam"
+												class="searchbar form-control" value="#{clientAction.search}"
+												placeholder="Search for clients...">
+												<f:param name="search" value="" />
+											</h:inputText>
+
+											<div class="input-group-btn search-type">
+												<button type="button"
+													class="btn btn-default dropdown-toggle search-dropdown"
+													data-toggle="dropdown">
+													ID <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right">
+													<li><a href="">ID</a></li>
+													<li><a href="">First Name</a></li>
+													<li><a href="">Last Name</a></li>
+													<li><a href="">User Name</a></li>
+													<h:inputHidden id="type" name="type"
+														value="#{clientAction.type}" />
+												</ul>
+											</div>
+										</div>
+
+									</o:form>
+							</div>
+							<div class="col-md-3 col-md-push-4">
+								<button data-toggle="modal" data-target="#inventory"
+									class="btn btn-bookoo btn-add">Add Client</button>
+							</div>
+						</div>
+
+
+						<h:dataTable id="inventory-list"
+							value="#{clientAction.allClients}" var="client"
+							styleClass="table table-hover table-striped" size="10">
+							<h:column>
+								<f:facet name="header">#{msgs_client.Id}</f:facet>
+				               	#{client.id}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.Username}</f:facet>
+				               #{client.username}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.ClientTitle}</f:facet>
+				               #{client.title}              
+				               #{client.firstName}
+				               #{client.lastName}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.CompanyName}</f:facet>
+				               #{client.companyName}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Address</f:facet>
+								<h:outputText value="#{client.address1}"></h:outputText>
+								<br />
+								<h:outputText value="#{client.city}, #{client.province}"></h:outputText>
+								<br />
+								<h:outputText value="#{client.country} #{client.postalCode}"></h:outputText>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">#{msgs_client.PhoneNumber}</f:facet>
+				               #{client.phoneNumber}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.CellNumber}</f:facet>
+				               #{client.cellNumber}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.Email}</f:facet>
+				               #{client.email}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Client Value</f:facet>
+								<h:outputText value="#{reportsAction.getClientValue(client)}">
+									<f:convertNumber type="currency" minFractionDigits="2" maxFractionDigits="2"></f:convertNumber>
+								</h:outputText>
+							</h:column>
+							<h:column>
+								<h:form>
+									<f:facet name="header">Manager</f:facet>
+									<h:commandButton action="#{clientAction.setManager(client)}"
+										rendered="#{client.manager}"
+										value="Demote" class="btn btn-bookoo" />
+									<h:commandButton action="#{clientAction.setManager(client)}"
+										rendered="#{not client.manager}"
+										value="Promote" class="btn btn-bookoo" />
+								</h:form>
+				            </h:column> 
+							<h:column>
+								<td class="actions"><a href="#" data-toggle="modal"
+									data-target="#inventory_#{client.id}"> <i
+										class="fa fa-pencil"></i> Edit
+								</a></td>
+							</h:column>
+
+							<h:column>
+								<div class="modal fade modalclient" id="inventory_#{client.id}"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+									aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal" id="userFormEdit">
+												<h:inputHidden id="id" name="id" value="#{client.id}"></h:inputHidden>
+												<div class="modal-header">
+													<legend>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-hidden="true">
+															<i class="fa fa-times bookoo-times"></i>
+														</button>
+														<h:outputText value="Edit Client" />
+														<br />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+														<!-- start of row 2 registration form -->
+
+														<div class="row">
+															<!-- inner row for user/pass info -->
+															<div class="col-md-12">
+																<legend>
+																	<h:outputText
+																		value="#{msgs_register.AccountInformation}" />
+																</legend>
+																<div class="line-content"></div>
+																<div class="col-md-6">
+
+																	<!-- USERNAME -->
+																	<div class="form-group">
+																		<h:outputLabel class="col-xs-3 control-label"
+																			for="username" value="#{msgs_register.Username}" />
+																		<div class="col-xs-4 input-group-sm">
+																			<h:inputText id="username" name="username"
+																				class="form-control" value="#{client.username}"
+																				validator="#{client.validateUsername}"
+																				required="true">
+																				<f:ajax event="blur" render="usernameError" />
+																			</h:inputText>
+																		</div>
+																		<h:message id="usernameError" for="username"
+																			class="inputErrorModal" />
+																	</div>
+
+																	<!-- PASSWORD -->
+																	<div class="form-group">
+																		<h:outputLabel class="col-xs-3 control-label"
+																			for="password" value="#{msgs_register.Password}" />
+																		<div class="col-xs-4 input-group-sm">
+																			<h:inputSecret id="password" name="password"
+																				class="form-control" value="#{client.password}"
+																				validator="#{client.validatePassword}"
+																				required="true">
+																				<f:ajax event="blur" render="passwordError" />
+																			</h:inputSecret>
+																		</div>
+																		<h:message id="passwordError" for="password"
+																			class="inputErrorModal" />
+																	</div>
+
+																	<!-- CONFIRM PASSWORD -->
+																	<div class="form-group">
+																		<h:outputLabel class="col-xs-3 control-label"
+																			for="confirmpassword"
+																			value="#{msgs_register.ConfirmPassword}" />
+																		<div class="col-xs-4 input-group-sm">
+																			<h:inputSecret id="confirmpassword"
+																				name="confirmpassword" class="form-control"
+																				validator="#{clientBean.validatePasswordMatch}">
+																				<f:ajax execute="password confirmpassword"
+																					event="blur" resetValues="true"
+																					render="passwordsDontMatchError" />
+																			</h:inputSecret>
+																		</div>
+																		<h:message id="passwordsDontMatchError"
+																			for="confirmpassword" class="inputErrorModal" />
+																	</div>
+																</div>
+															</div>
+															<!-- End of left col (user/pass) -->
+														</div>
+														<!-- end of inner row for user/pass info -->
+
+														<br />
+
+														<div class="row registration-user-info">
+															<!-- start of inner row for all other user info -->
+															<div class="col-md-6">
+																<legend>
+																	<h:outputText
+																		value="#{msgs_register.PersonalInformation}" />
+																</legend>
+																<div class="line-content"></div>
+
+																<!-- TITLE -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="title" value="Title" />
+																	<div class="col-xs-4 input-group-sm">
+																		<h:selectOneMenu id="title" name="title"
+																			class="form-control input-xs" value="#{client.title}">
+																			<f:selectItem itemLabel="Mr." itemValue="Mr." />
+																			<f:selectItem itemLabel="#{msgs_register.Ms}"
+																				itemValue="Ms." />
+																			<f:selectItem itemLabel="#{msgs_register.Mrs}"
+																				itemValue="Mrs." />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+
+																<!-- FIRST NAME -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="firstname" value="#{msgs_register.FirstName}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="firstname" name="firstname"
+																			class="form-control" value="#{client.firstName}"
+																			validator="#{client.validateName}"
+																			required="true">
+																			<f:ajax event="blur" render="firstnameError" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="firstnameError" for="firstname"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- LAST NAME -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="lastname" value="#{msgs_register.LastName}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="lastname" name="lastname"
+																			class="form-control" value="#{client.lastName}"
+																			validator="#{client.validateName}"
+																			required="true">
+																			<f:ajax event="blur" render="lastnameError" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="lastnameError" for="lastname"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- COMPANY -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="company" value="#{msgs_register.Company}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="company" name="company"
+																			class="form-control" value="#{client.companyName}"
+																			validator="#{client.validateCompanyName}"
+																			required="true">
+																			<f:ajax event="blur" render="companyError" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="companyError" for="company"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- PHONE NUMBER -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="phonenumber" value="#{msgs_register.PhoneNumber}" />
+																	<div class="col-xs-4 input-group-sm">
+																		<h:inputText id="phonenumber" name="phonenumber"
+																			class="form-control" value="#{client.phoneNumber}"
+																			required="true" placeholder="(999) 999 9999">
+																			<f:ajax event="blur" render="phonenumberError" />
+																		</h:inputText>
+																		<h:message id="phonenumberError" for="phonenumber"
+																			class="inputErrorModal" />
+																	</div>
+																</div>
+
+																<!-- CELL NUMBER -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="cellnumber" value="#{msgs_register.CellNumber}" />
+																	<div class="col-xs-4 input-group-sm">
+																		<h:inputText id="cellnumber" name="cellnumber"
+																			class="form-control" value="#{client.cellNumber}"
+																			required="true" placeholder="(999) 999 9999">
+																			<f:ajax event="blur" render="cellnumberError" />
+																		</h:inputText>
+																		<h:message id="cellnumberError" for="cellnumber"
+																			class="inputErrorModal" />
+																	</div>
+																</div>
+
+																<!-- EMAIL -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-3 control-label"
+																		for="emailaddr" value="#{msgs_register.Email}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="emailaddr" name="emailaddr"
+																			class="form-control" value="#{client.email}"
+																			validator="#{client.validateEmail}" required="true">
+																			<f:ajax event="blur" render="emailaddrError" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="emailaddrError" for="emailaddr"
+																		class="inputErrorModal" />
+																</div>
+
+															</div>
+															<!-- End of left col - personal info -->
+
+
+															<div class="col-md-6">
+																<legend>
+																	<h:outputText
+																		value="#{msgs_register.BillingInformation}" />
+																</legend>
+																<div class="line-content"></div>
+
+																<!-- hack to skip align the form -->
+																<div class="form-group form-hack" style="height: 34px;"></div>
+																<!-- enf of hack -->
+
+																<!-- ADDRESS 1 -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-2 control-label"
+																		for="addr1" value="#{msgs_register.Address1}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="addr1" name="addr1"
+																			class="form-control" value="#{client.address1}"
+																			validator="#{client.validateAddress}" required="true">
+																			<f:ajax event="blur" render="addr1Error" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="addr1Error" for="addr1"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- ADDRESS 2 -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-2 control-label"
+																		for="addr2" value="#{msgs_register.Address2}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="addr2" name="addr2"
+																			class="form-control" value="#{client.address2}"
+																			validator="#{client.validateAddress}">
+																			<f:ajax event="blur" render="addr2Error" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="addr2Error" for="addr2"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- CITY -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-2 control-label"
+																		for="cityname" value="#{msgs_register.City}" />
+																	<div class="col-xs-6 input-group-sm">
+																		<h:inputText id="cityname" name="cityname"
+																			class="form-control" value="#{client.city}"
+																			validator="#{client.validateCity}" required="true">
+																			<f:ajax event="blur" render="cityError" />
+																		</h:inputText>
+																	</div>
+																	<h:message id="cityError" for="cityname"
+																		class="inputErrorModal" />
+																</div>
+
+																<!-- PROVINCE -->
+																<div class="form-group">
+																	<h:message class="help-block" for="province" />
+																	<h:outputLabel class="col-xs-2 control-label"
+																		for="province" value="#{msgs_register.Province}" />
+																	<div class="col-xs-4 input-group-sm">
+																		<h:selectOneMenu id="province" name="province"
+																			class="form-control input-xs"
+																			value="#{client.province}" required="true">
+																			<f:selectItem itemLabel="Alberta" itemValue="AB" />
+																			<f:selectItem itemLabel="#{msgs_register.BC}"
+																				itemValue="BC" />
+																			<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+																			<f:selectItem itemLabel="#{msgs_register.NB}"
+																				itemValue="NB" />
+																			<f:selectItem itemLabel="#{msgs_register.NL}"
+																				itemValue="NL" />
+																			<f:selectItem itemLabel="#{msgs_register.NS}"
+																				itemValue="NS" />
+																			<f:selectItem itemLabel="#{msgs_register.NT}"
+																				itemValue="NT" />
+																			<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+																			<f:selectItem itemLabel="Ontario" itemValue="ON" />
+																			<f:selectItem itemLabel="#{msgs_register.PE}"
+																				itemValue="PE" />
+																			<f:selectItem itemLabel="#{msgs_register.QC}"
+																				itemValue="QC" />
+																			<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+																			<f:selectItem itemLabel="Yukon" itemValue="YT" />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+
+																<!-- COUNTRY -->
+																<div class="form-group">
+																	<h:message class="help-block" for="country" />
+																	<h:outputLabel class="col-xs-2 control-label"
+																		for="country" value="#{msgs_register.Country}" />
+																	<div class="col-xs-4 input-group-sm">
+																		<h:selectOneMenu id="country" name="country"
+																			class="form-control" value="#{client.country}"
+																			required="true">
+																			<f:selectItem itemLabel="Canada" itemValue="Canada" />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+
+																<!-- POSTAL CODE -->
+																<div class="form-group">
+																	<h:outputLabel class="col-xs-2  control-label"
+																		for="postalcode" value="#{msgs_register.PostalCode}" />
+																	<div class="col-xs-3 input-group-sm">
+																		<h:inputText id="postalcode" name="postalcode"
+																			class="form-control" value="#{client.postalCode}"
+																			required="true" placeholder="A1A 1A1">
+																		</h:inputText>
+																	</div>
+																	<h:message id="postalcodeError" for="postalcode"
+																		class="inputErrorModal" />
+																</div>
+
+															</div>
+															<!-- end of right col - billing info -->
+
+
+														</div>
+														<!-- end of row with user info -->
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton value="Edit" class="btn btn-bookoo"
+														action="#{clientAction.checkUpdate(client)}" />
+												</div>
+
+											</h:form>
+										</div>
+									</div>
+								</div>
+
+
+							</h:column>
+						</h:dataTable>
+
+						<!-- ADD CLIENT MODAL -->
+						<div class="modal fade modalclient" id="inventory" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<h:form class="form-horizontal" id="userForm">
+
+										<div class="modal-header">
+											<legend>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">
+													<i class="fa fa-times bookoo-times"></i>
+												</button>
+												<h:outputText value="Add Client" />
+												<br />
+											</legend>
+										</div>
+
+										<div class="modal-body">
+											<div class="row">
+												<!-- start of row 2 registration form -->
+
+												<div class="row">
+													<!-- inner row for user/pass info -->
+													<div class="col-md-12">
+														<legend>
+															<h:outputText value="#{msgs_register.AccountInformation}" />
+														</legend>
+														<div class="line-content"></div>
+														<div class="col-md-6">
+
+															<!-- USERNAME -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="username" value="#{msgs_register.Username}" />
+																<div class="col-xs-4">
+																	<h:inputText id="username" name="username"
+																		class="form-control" value="#{clientBean.username}"
+																		validator="#{clientBean.validateUsername}"
+																		required="true">
+																		<f:ajax event="blur" render="usernameError" />
+																	</h:inputText>
+																</div>
+																<h:message id="usernameError" for="username"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- PASSWORD -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="password" value="#{msgs_register.Password}" />
+																<div class="col-xs-4">
+																	<h:inputSecret id="password" name="password"
+																		class="form-control" value="#{clientBean.password}"
+																		validator="#{clientBean.validatePassword}"
+																		required="true">
+																		<f:ajax event="blur" render="passwordError" />
+																	</h:inputSecret>
+																</div>
+																<h:message id="passwordError" for="password"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- CONFIRM PASSWORD -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="confirmpassword"
+																	value="#{msgs_register.ConfirmPassword}" />
+																<div class="col-xs-4">
+																	<h:inputSecret id="confirmpassword"
+																		name="confirmpassword" class="form-control"
+																		validator="#{clientBean.validatePasswordMatch}">
+																		<f:ajax execute="password confirmpassword"
+																			event="blur" resetValues="true"
+																			render="passwordsDontMatchError" />
+																	</h:inputSecret>
+																</div>
+																<h:message id="passwordsDontMatchError"
+																	for="confirmpassword" class="inputErrorModal" />
+															</div>
+														</div>
+													</div>
+													<!-- End of left col (user/pass) -->
+												</div>
+												<!-- end of inner row for user/pass info -->
+
+												<br />
+
+												<div class="row registration-user-info">
+													<!-- start of inner row for all other user info -->
+													<div class="col-md-6">
+														<legend>
+															<h:outputText
+																value="#{msgs_register.PersonalInformation}" />
+														</legend>
+														<div class="line-content"></div>
+
+														<!-- TITLE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label" for="title"
+																value="Title" />
+															<div class="col-xs-4">
+																<h:selectOneMenu id="title" name="title"
+																	class="form-control input-xs"
+																	value="#{clientBean.title}">
+																	<f:selectItem itemLabel="Mr." itemValue="Mr." />
+																	<f:selectItem itemLabel="#{msgs_register.Ms}"
+																		itemValue="Ms." />
+																	<f:selectItem itemLabel="#{msgs_register.Mrs}"
+																		itemValue="Mrs." />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+														<!-- FIRST NAME -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="firstname" value="#{msgs_register.FirstName}" />
+															<div class="col-xs-6">
+																<h:inputText id="firstname" name="firstname"
+																	class="form-control" value="#{clientBean.firstName}"
+																	validator="#{clientBean.validateName}"
+																	required="true">
+																	<f:ajax event="blur" render="firstnameError" />
+																</h:inputText>
+															</div>
+															<h:message id="firstnameError" for="firstname"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- LAST NAME -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="lastname" value="#{msgs_register.LastName}" />
+															<div class="col-xs-6">
+																<h:inputText id="lastname" name="lastname"
+																	class="form-control" value="#{clientBean.lastName}"
+																	validator="#{clientBean.validateName}"
+																	required="true">
+																	<f:ajax event="blur" render="lastnameError" />
+																</h:inputText>
+															</div>
+															<h:message id="lastnameError" for="lastname"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- COMPANY -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="company" value="#{msgs_register.Company}" />
+															<div class="col-xs-6">
+																<h:inputText id="company" name="company"
+																	class="form-control" value="#{clientBean.companyName}"
+																	validator="#{clientBean.validateCompanyName}"
+																	required="true">
+																	<f:ajax event="blur" render="companyError" />
+																</h:inputText>
+															</div>
+															<h:message id="companyError" for="company"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- PHONE NUMBER -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="phonenumber" value="#{msgs_register.PhoneNumber}" />
+															<div class="col-xs-4">
+																<h:inputText id="phonenumber" name="phonenumber"
+																	class="form-control" value="#{clientBean.phoneNumber}"
+																	required="true" placeholder="(999) 999 9999">
+																	<f:ajax event="blur" render="phonenumberError" />
+																</h:inputText>
+																<h:message id="phonenumberError" for="phonenumber"
+																	class="inputErrorModal" />
+															</div>
+														</div>
+
+														<!-- CELL NUMBER -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="cellnumber" value="#{msgs_register.CellNumber}" />
+															<div class="col-xs-4">
+																<h:inputText id="cellnumber" name="cellnumber"
+																	class="form-control" value="#{clientBean.cellNumber}"
+																	required="true" placeholder="(999) 999 9999">
+																	<f:ajax event="blur" render="cellnumberError" />
+																</h:inputText>
+																<h:message id="cellnumberError" for="cellnumber"
+																	class="inputErrorModal" />
+															</div>
+														</div>
+
+														<!-- EMAIL -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="emailaddr" value="#{msgs_register.Email}" />
+															<div class="col-xs-6">
+																<h:inputText id="emailaddr" name="emailaddr"
+																	class="form-control" value="#{clientBean.email}"
+																	validator="#{clientBean.validateEmail}" required="true">
+																	<f:ajax event="blur" render="emailaddrError" />
+																</h:inputText>
+															</div>
+															<h:message id="emailaddrError" for="emailaddr"
+																class="inputErrorModal" />
+														</div>
+
+													</div>
+													<!-- End of left col - personal info -->
+
+
+													<div class="col-md-6">
+														<legend>
+															<h:outputText value="#{msgs_register.BillingInformation}" />
+														</legend>
+														<div class="line-content"></div>
+
+														<!-- hack to skip align the form -->
+														<div class="form-group form-hack" style="height: 34px;"></div>
+														<!-- enf of hack -->
+
+														<!-- ADDRESS 1 -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="addr1"
+																value="#{msgs_register.Address1}" />
+															<div class="col-xs-6">
+																<h:inputText id="addr1" name="addr1"
+																	class="form-control" value="#{clientBean.address1}"
+																	validator="#{clientBean.validateAddress}"
+																	required="true">
+																	<f:ajax event="blur" render="addr1Error" />
+																</h:inputText>
+															</div>
+															<h:message id="addr1Error" for="addr1"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- ADDRESS 2 -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="addr2"
+																value="#{msgs_register.Address2}" />
+															<div class="col-xs-6">
+																<h:inputText id="addr2" name="addr2"
+																	class="form-control" value="#{clientBean.address2}"
+																	validator="#{clientBean.validateAddress}"
+																	required="true">
+																	<f:ajax event="blur" render="addr2Error" />
+																</h:inputText>
+															</div>
+															<h:message id="addr2Error" for="addr2"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- CITY -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label"
+																for="cityname" value="#{msgs_register.City}" />
+															<div class="col-xs-6">
+																<h:inputText id="cityname" name="cityname"
+																	class="form-control" value="#{clientBean.city}"
+																	validator="#{clientBean.validateCity}" required="true">
+																	<f:ajax event="blur" render="cityError" />
+																</h:inputText>
+															</div>
+															<h:message id="cityError" for="cityname"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- PROVINCE -->
+														<div class="form-group">
+															<h:message class="help-block" for="province" />
+															<h:outputLabel class="col-xs-2 control-label"
+																for="province" value="#{msgs_register.Province}" />
+															<div class="col-xs-4">
+																<h:selectOneMenu id="province" name="province"
+																	class="form-control input-xs"
+																	value="#{clientBean.province}" required="true">
+																	<f:selectItem itemLabel="Alberta" itemValue="AB" />
+																	<f:selectItem itemLabel="#{msgs_register.BC}"
+																		itemValue="BC" />
+																	<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+																	<f:selectItem itemLabel="#{msgs_register.NB}"
+																		itemValue="NB" />
+																	<f:selectItem itemLabel="#{msgs_register.NL}"
+																		itemValue="NL" />
+																	<f:selectItem itemLabel="#{msgs_register.NS}"
+																		itemValue="NS" />
+																	<f:selectItem itemLabel="#{msgs_register.NT}"
+																		itemValue="NT" />
+																	<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+																	<f:selectItem itemLabel="Ontario" itemValue="ON" />
+																	<f:selectItem itemLabel="#{msgs_register.PE}"
+																		itemValue="PE" />
+																	<f:selectItem itemLabel="#{msgs_register.QC}"
+																		itemValue="QC" />
+																	<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+																	<f:selectItem itemLabel="Yukon" itemValue="YT" />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+														<!-- COUNTRY -->
+														<div class="form-group">
+															<h:message class="help-block" for="country" />
+															<h:outputLabel class="col-xs-2 control-label"
+																for="country" value="#{msgs_register.Country}" />
+															<div class="col-xs-4">
+																<h:selectOneMenu id="country" name="country"
+																	class="form-control" value="#{clientBean.country}"
+																	required="true">
+																	<f:selectItem itemLabel="Canada" itemValue="Canada" />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+														<!-- POSTAL CODE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2  control-label"
+																for="postalcode" value="#{msgs_register.PostalCode}" />
+															<div class="col-xs-3">
+																<h:inputText id="postalcode" name="postalcode"
+																	class="form-control" value="#{clientBean.postalCode}"
+																	required="true" placeholder="A1A 1A1">
+																</h:inputText>
+															</div>
+															<h:message id="postalcodeError" for="postalcode"
+																class="inputErrorModal" />
+														</div>
+
+													</div>
+													<!-- end of right col - billing info -->
+
+							
+												</div>
+												<!-- end of row with user info -->
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<h:commandButton value="Create Profile" class="btn btn-bookoo"
+												action="#{clientAction.checkRegistration}" />
+										</div>
+
+									</h:form>
+								</div>
+							</div>
+						</div>
+						<!-- CLOSE ADD CLIENT MODAL -->
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

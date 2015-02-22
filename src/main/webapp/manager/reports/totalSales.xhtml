@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+  	
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+		
+		<h:outputScript value="jquery.js" />
+		<h:outputScript value="jquery/jquery.js" library="primefaces" />
+		
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h2> #{msgs_top.TotalSalesTitle}</h2>
+						<div class="line-content"></div>
+						<!-- DATE SECTION -->
+						<h:form>
+							<label for="CalendarStart">#{msgs_top.DateIn}</label>
+							<br/>
+								<rich:calendar id="CalendarStart"
+									value="#{report.calendarStart}"
+									timeZone="#{report.timeZone}"
+									datePattern="yyyy-MM-dd">
+	          								<a4j:ajax event="change" render="table1, table2"/>
+
+
+								<!-- Customization with usage of facets and accessible elements -->
+
+								<f:facet name="header">
+									<h:panelGrid columns="2" width="100%"
+										columnClasses="width100, fake">
+										<h:outputText value="{selectedDateControl}" />
+										<h:outputText value="{todayControl}"
+											style="font-weight:bold; text-align:left" />
+									</h:panelGrid>
+								</f:facet>
+								<f:facet name="weekDay">
+									<h:panelGroup style="width:60px; overflow:hidden;"
+										layout="block">
+										<h:outputText value="{weekDayLabelShort}" />
+									</h:panelGroup>
+								</f:facet>
+								<f:facet name="weekNumber">
+									<h:panelGroup>
+										<h:outputText value="{weekNumber}" style="color:red" />
+									</h:panelGroup>
+								</f:facet>
+								<f:facet name="footer">
+									<h:panelGrid columns="3" width="100%"
+										columnClasses="fake, width100 talign">
+										<h:outputText value="{previousMonthControl}"
+											style="font-weight:bold;" />
+										<h:outputText value="{currentMonthControl}"
+											style="font-weight:bold;" />
+										<h:outputText value="{nextMonthControl}"
+											style="font-weight:bold;" />
+									</h:panelGrid>
+								</f:facet>
+							</rich:calendar>
+							
+							<br/>
+							<label for="CalendarEnd" class="dateOut">#{msgs_top.DateOut}</label>
+							
+							<br/>
+							<rich:calendar id="CalendarEnd"
+								value="#{report.calendarEnd}"
+								timeZone="#{report.timeZone}"
+								datePattern="yyyy-MM-dd">
+	          								<a4j:ajax event="change" render="table1, table2"/>
+								</rich:calendar>
+							<br/>
+						</h:form>
+						
+						<!-- SUMMARY -->
+						<h5>#{msgs_top.TotalSalesSubTitle0}</h5>
+						<h:dataTable id="table1" value="#{reportsAction.reportTotalSalesSummary(report.checkin, report.checkout)}" var="salesSummary" styleClass="table table-hover table-striped" >
+							<h:column> 
+								<f:facet name="header">Total Sales</f:facet> 
+								#{salesSummary[0]} 
+							</h:column> 
+							<h:column> 
+								<f:facet name="header">Total Cost</f:facet> 
+								#{salesSummary[1]} 
+							</h:column> 
+							<h:column> 
+								<f:facet name="header">Profit</f:facet> 
+								#{salesSummary[2]} 
+							</h:column> 
+						</h:dataTable>
+						
+						<!-- DETAILS -->
+						<h5>#{msgs_top.TotalSalesSubTitle1}</h5>
+						<h:dataTable  id="table2" value="#{reportsAction.reportTotalSales(report.checkin, report.checkout)}" var="salesList" styleClass="table table-hover table-striped" >
+							<h:column>
+								<f:facet name="header">#{msgs_top.bookID}</f:facet>
+				               	#{salesList.bookID}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_top.title}</f:facet>
+				               	#{salesList.title}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_top.quantitySold}</f:facet>
+				               	#{salesList.quantity}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_top.total}</f:facet>
+				               	#{salesList.total}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Date</f:facet>
+				               	#{salesList.dateString}
+				            </h:column>
+				       	</h:dataTable>
+				       	
+				      </div>
+			     </div>
+		     </div>
+			</h:body>
+		</ui:define>
+	</ui:composition>
+</html>

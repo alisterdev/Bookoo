@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container main-content">
+
+				<!-- Shopping Cart / Checkout Navigation -->
+				<div class="row form-group">
+					<ul id="breadcrumb" class="col-md-12 navsetup well">
+						<li class="active col-md-4"><a href="#"><i
+								class="fa fa-shopping-cart fa-lg"></i><br />Shipping</a></li>
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-share fa-lg"></i><br />#{msgs_cart.checkOut}</a></li>
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-file-text-o fa-lg"></i><br />#{msgs_cart.placeOrder}</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- CHECKOUT -->
+				<div class="row navsection" id="step-1">
+					<div class="col-md-12 well checkout-content">
+						<h:panelGroup layout="block"
+							rendered="#{not shoppingCart.emptyCart}">
+							<h:form class="form-horizontal">
+								<!-- SHIPPING  -->
+								<div class="tab-pane" id="shipping">
+
+									<div class="row header">
+										<!-- header row -->
+										<h2 class="header-title">Shipping</h2>
+										<p class="header-info">Select a shipping address or enter
+											a new shipping address</p>
+										<div class="line-content"></div>
+									</div>
+
+									<div class="row">
+										<!-- Default Shipping Information -->
+										<div class="col-sm-6 col-md-3">
+											<legend>
+												<i class="fa fa-truck"></i>
+												<h:outputText value=" Address 1" />
+											</legend>
+											<h:outputText id="firstname" name="firstname"
+												value="#{userSession.client.firstName}">
+											</h:outputText>
+											<h:outputText id="lastname" name="lastname"
+												value=" #{userSession.client.lastName}">
+											</h:outputText>
+											<br />
+											<h:outputText id="address" name="address"
+												value="#{userSession.client.address1}">
+											</h:outputText>
+											<br />
+											<h:outputText id="city" name="city"
+												value="#{userSession.client.city}">
+											</h:outputText>
+											<h:outputText id="province" name="province"
+												value=" ,#{userSession.client.province}">
+											</h:outputText>
+											<h:outputText id="postalcode" name="postalcode"
+												value=" ,#{userSession.client.postalCode}">
+											</h:outputText>
+											<br />
+											<h:outputText id="country" name="country"
+												value="#{userSession.client.country}">
+											</h:outputText>
+											<br />
+											<h:outputLink
+												value="#{request.contextPath}/faces/profile/payment.xhtml"
+												class="btn btn-bookoo">
+												<h:outputText value="Checkout" />
+											</h:outputLink>
+										</div>
+
+										<!-- Shipping Information -->
+										<div class="col-sm-6 col-md-6">
+											<legend>
+												<i class="fa fa-truck"></i>
+												<h:outputText value=" Address 2" />
+											</legend>
+											<!-- ADDRESS 1 -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4 control-label"
+													for="shipaddress1">
+													<span class="required-field">* </span>#{msgs_register.Address1}
+										</h:outputLabel>
+												<div class="col-sm-6">
+													<h:inputText id="shipaddress1" name="shipaddress1"
+														class="form-control" value="#{clientBean.shipAddress1}"
+														required="true" label="address 1"
+														validator="#{clientBean.validateAddress}"
+														placeholder="1234 Sherbrook W.">
+														<f:ajax event="blur" render="shipaddress1Error" />
+													</h:inputText>
+													<h:message id="shipaddress1Error" for="shipaddress1"
+														class="inputError" />
+												</div>
+											</div>
+
+											<!-- ADDRESS 2 -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4 control-label"
+													for="shipaddress2" value="#{msgs_register.Address2}" />
+												<div class="col-sm-6">
+													<h:inputText id="shipaddress2" name="shipaddress2"
+														class="form-control" value="#{clientBean.shipAddress2}"
+														label="address 2" placeholder="Apt 1"
+														validator="#{clientBean.validateAddress}">
+														<f:ajax event="blur" render="shipaddress2Error" />
+													</h:inputText>
+													<h:message id="shipaddress2Error" for="shipaddress2"
+														class="inputError" />
+												</div>
+											</div>
+
+											<!-- CITY -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4 control-label" for="shipcity">
+													<span class="required-field">* </span>#{msgs_register.City}
+										</h:outputLabel>
+												<div class="col-sm-6">
+													<h:inputText id="shipcity" name="shipcity"
+														class="form-control" value="#{clientBean.shipCity}"
+														required="true" label="city"
+														validator="#{clientBean.validateCity}"
+														placeholder="Montreal">
+														<f:ajax event="blur" render="shipcityError" />
+													</h:inputText>
+													<h:message id="shipcityError" for="shipcity"
+														class="inputError" />
+												</div>
+											</div>
+
+											<!-- PROVINCE -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4 control-label"
+													for="shipprovince">
+													<span class="required-field">* </span>#{msgs_register.Province}
+										</h:outputLabel>
+												<div class="col-sm-4">
+													<h:selectOneMenu id="shipprovince" name="shipprovince"
+														class="form-control input-sm"
+														value="#{clientBean.shipProvince}" required="true"
+														validatorMessage="">
+														<f:selectItem itemLabel="Alberta" itemValue="AB" />
+														<f:selectItem itemLabel="#{msgs_register.BC}"
+															itemValue="BC" />
+														<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+														<f:selectItem itemLabel="#{msgs_register.NB}"
+															itemValue="NB" />
+														<f:selectItem itemLabel="#{msgs_register.NL}"
+															itemValue="NL" />
+														<f:selectItem itemLabel="#{msgs_register.NS}"
+															itemValue="NS" />
+														<f:selectItem itemLabel="#{msgs_register.NT}"
+															itemValue="NT" />
+														<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+														<f:selectItem itemLabel="Ontario" itemValue="ON" />
+														<f:selectItem itemLabel="#{msgs_register.PE}"
+															itemValue="PE" />
+														<f:selectItem itemLabel="#{msgs_register.QC}"
+															itemValue="QC" />
+														<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+														<f:selectItem itemLabel="Yukon" itemValue="YT" />
+													</h:selectOneMenu>
+												</div>
+											</div>
+
+											<!-- COUNTRY -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4 control-label"
+													for="shipcountry">
+													<span class="required-field">* </span>#{msgs_register.Country}
+												</h:outputLabel>
+												<div class="col-sm-4">
+													<h:selectOneMenu id="shipcountry" name="shipcountry"
+														class="form-control input-sm"
+														value="#{clientBean.shipCountry}" required="true"
+														requiredMessage="#{msgs_register.errorCountry}">
+														<f:selectItem itemLabel="Canada" itemValue="Canada" />
+													</h:selectOneMenu>
+												</div>
+											</div>
+
+											<!-- POSTAL CODE -->
+											<div class="form-group">
+												<h:outputLabel class="col-sm-4  control-label"
+													for="shippostalcode">
+													<span class="required-field">* </span>#{msgs_register.PostalCode}
+										</h:outputLabel>
+												<div class="col-sm-3">
+													<h:inputText id="shippostalcode" name="shippostalcode"
+														class="form-control postalcode"
+														value="#{clientBean.shipPostalCode}" required="true"
+														label="postal code"
+														requiredMessage="#{msgs_register.errorPostalCode}"
+														validator="#{clientBean.validatePostalCode}"
+														placeholder="H1H 1H1">
+														<f:ajax event="blur" render="shippostalCodeError" />
+													</h:inputText>
+													<h:message style="width:200%" id="shippostalCodeError"
+														for="postalcode" class="inputError" />
+												</div>
+											</div>
+											<div class="col-md-6 col-md-offset-4">
+												<h:outputLink
+													value="#{request.contextPath}/faces/profile/payment.xhtml"
+													class="btn btn-bookoo">
+													<h:outputText value="Checkout" />
+												</h:outputLink>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+							</h:form>
+							<!-- CLOSE SHIPPING -->
+						</h:panelGroup>
+
+						<h:panelGroup layout="block" rendered="#{shoppingCart.emptyCart}">You shouldn't be here.</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+	<h:body styleClass="body">
+	
+	
+	<div class="container main-content">
+		<div class="row header"> 
+			<!-- header row -->
+			<h2 class="header-title">#{msgs_header.contactus}</h2>
+			<p class="header-info">#{msgs_header.contactussubtitle}</p>
+			<div class="line-content"></div>
+		</div>	
+		<div class="row">
+			<div class="col-md-8">
+					<h4>Bookoo Store</h4>
+					<h5>5730, rue Sherbrooke Est</h5>
+					<h5>Montréal, QC H1N 1A5</h5>	
+					<h5>(514) 527-3425</h5>
+					<div>
+						<br/>
+						<h5><a href="#" data-toggle="modal" data-target="#sendemail">
+						<i class="fa fa-envelope fa-lg"></i></a> contact@bookoo.qc.ca</h5>
+					</div>
+			</div>	
+				
+			<div class="modal fade" id="sendemail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" >
+					<div class="modal-content">		
+						<div class="modal-header">
+							<legend>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">
+									<i class="fa fa-times bookoo-times"></i>
+								</button>
+								<h:outputText value="#{msgs_header.contactus}" />
+								<br />
+							</legend>
+						</div>
+						<div class="modal-body">
+						
+						<!-- SEND EMAIL FORM -->
+						<h:form>
+							<div class="login-container">
+							<!-- RECIPIENT -->
+							<div class="form-group">	
+								<h:outputLabel class="control-label" for="recipient" value="To " />
+								<h:inputText id="recipientemail" name="recipientemail" class="form-control" value="contact@bookoo.qc.ca" readonly="true" />
+							</div>
+							<!-- SENDER -->
+							<div class="form-group">	
+								<h:outputLabel class="control-label" for="sender" value="From " />
+								<h:inputText id="senderemail" name="senderemail" class="form-control" required="false" />
+							</div>
+							<!-- EMAIL AREA -->
+							<div class="form-group">	
+								<h:inputTextarea id="message" name="emailmessage" class="form-control" />
+							</div>
+							<!-- BUTTONS -->
+							<div class="form-group">	
+								<h:commandButton type="submit" value="#{msgs_header.send}" class="btn btn-bookoo" />
+								<h:commandButton type="submit" value="#{msgs_header.cancel}" class="btn btn-bookoo" />
+								
+							</div>
+						</div>
+						</h:form>
+					</div>
+						
+					</div>
+				</div>
+			</div> 		
+		</div>
+	
+	</div>	
+		
+	</h:body>
+	</ui:define>
+	
+</ui:composition>
+
+</html>
+	

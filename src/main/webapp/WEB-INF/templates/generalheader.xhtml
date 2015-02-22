@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 	xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:o="http://omnifaces.org/ui"
+		xmlns:c="http://java.sun.com/jsp/jstl/core" >
+    
+<ui:composition>
+<!-- Sign-in Modal -->
+	<div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				  <div class="modal-header">
+        		  <legend>
+	        		  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times bookoo-times"></i></button>
+	        		  <h:outputText value="#{msgs_header.loginMsg}" /><br/>
+					  <h5>#{msgs_header.notUser}</h5>
+				  </legend>
+      			</div>
+			
+				<div class="modal-body">
+					<o:form role="form" includeRequestParams="true" id="signInForm">
+						<div class="login-container">
+							<!-- USERNAME -->
+							<div class="form-group">	
+								<h:outputLabel class="control-label" for="username" value="#{msgs_header.username}" />
+								<h:inputText id="username" name="username" class="form-control" value="#{userSession.inputUsername}" required="true" />
+								<!-- <h:inputText id="username" name="username" class="form-control" value="#{userSession.inputUsername}" >
+									<f:ajax event="blur" render="inputUsernameError"/>
+								</h:inputText> -->
+								<h:message id="inputUsernameError" for="username" class="inputError"/>
+							</div>
+							<!-- PASSWORD -->
+							<div class="form-group">	
+								<h:outputLabel class="control-label" for="password" value="#{msgs_header.password}" />
+								<h:inputSecret id="password" name="password" class="form-control" value="#{userSession.inputPassword}" required="true" />
+							</div>
+							<!-- STATUS MSG -->
+							<h:outputLabel class="inputError" id="displayResponse" for="loginBtn" value="#{userSession.message}" />
+							<!-- BUTTONS -->
+							<div class="form-group">	
+								<h:commandButton id="loginBtn" type="submit" value="#{msgs_header.login}" class="btn btn-bookoo" action="#{userSession.checkLogin}">
+									<f:ajax event="click" execute="@form" render="displayResponse" />
+								</h:commandButton>
+								<h:outputLink id="register" value="#{request.contextPath}/faces/register.xhtml" class="btn btn-bookoo">
+									<h:outputText value="#{msgs_header.register}"/>
+								</h:outputLink>
+							</div>
+						</div>
+					</o:form>
+				</div>
+			</div>
+		</div>
+	</div> <!-- End of modal dialog -->
+
+	<div class = "navbar navbar-inverse">
+		<div class="row login">
+			<div class="container">
+				<div class="login-box">
+					<h:panelGroup class="pull-left">
+						<o:form includeRequestParams="true">
+				       		<h:commandLink id="english-link" value="EN" action="#{localeChanger.changeLocale}" >
+				       			 <f:param name="locale" value="en"/>
+				       		</h:commandLink>
+				       		| 
+				       		<h:commandLink id="french-link" value="FR" action="#{localeChanger.changeLocale}" >
+				       			 <f:param name="locale" value="fr"/>  
+				       		</h:commandLink>
+						</o:form>
+					</h:panelGroup>
+				
+					<div id="cart" layout="block" class="pull-right" >
+							<h:outputLink id="shopping-cart" value="#{request.contextPath}/faces/cart.xhtml">
+								<!-- <i class="fa fa-shopping-cart fa-lg"></i>  -->
+								<h:outputText class="sm-screen-hide" value="#{msgs_header.cart}" />
+								<span class="badge"><h:outputText id="cart-counter" value=" #{shoppingCart.cartSize}" /></span>
+							</h:outputLink>
+					</div>
+					
+					 
+					<h:panelGroup id="signin" layout="block" class="pull-right" rendered="#{not userSession.isLoggedIn}">
+						<span class="sm-screen-hide">#{msgs_header.signin1} </span><a href="#" id="signInButton" data-toggle="modal" data-target="#signInModal">#{msgs_header.signin2}</a> #{msgs_header.choice} <a href="#{request.contextPath}/faces/register.xhtml">#{msgs_header.register1}</a> | 
+					</h:panelGroup>
+					
+					<h:form>
+					<h:panelGroup id="userinfo" layout="block" class="pull-right" rendered="#{userSession.isLoggedIn}">
+						<div class="input-group-btn" style="display:inline;">
+						<h:outputText value="#{msgs_header.welcome} "/>
+							<button type="button" class="btn-link" data-toggle="dropdown">
+								<h:outputText value="#{userSession.client.firstName}!" /> 
+								<span class="caret"></span>
+							</button>
+							|
+							<ul class="dropdown-menu pull-right">
+								<li>
+									<h:outputLink id="user-profile" value="#{request.contextPath}/faces/profile/user.xhtml">
+										<i class="fa fa-user"></i><h:outputText value=" #{msgs_header.profile}" />
+									</h:outputLink>
+								</li>
+								<h:panelGroup rendered="#{userSession.client.manager}"><li>
+									<h:outputLink id="management" value="#{request.contextPath}/faces/manager/clients.xhtml?faces-redirect=true">
+										<i class="glyphicon glyphicon-wrench"></i><h:outputText value=" #{msgs_header.management}" />
+									</h:outputLink>
+								</li></h:panelGroup>
+								
+								<li>
+									<h:commandLink style="color:#666666;padding-left:20px;" action="#{userSession.logout}" >
+										<i class="fa fa-sign-out"></i><h:outputText value=" #{msgs_header.logout}" />
+									</h:commandLink>
+								</li>
+							</ul>
+						</div> 
+					</h:panelGroup>
+					</h:form>
+				</div>
+			</div>
+		</div> <!-- End of login row -->
+		
+		<div class="row">
+			<div class="container">		
+
+			<div class="brand-container">
+				<h:outputLink id="brand-title" value="#{request.contextPath}/faces/home.xhtml" class="brand-title">bookoo</h:outputLink>
+				<p class="brand-subtitle">more books for less</p>
+			</div>
+
+			<div class="search-container">
+				<o:form id="searchForm" includeRequestParams="true">
+					<h:commandButton class='hide' action="search?faces-redirect=true&amp;includeViewParams=true" />
+					
+					<div class="input-group">
+						
+						<span class="input-group-addon">
+						 	<h:commandLink action="search?faces-redirect=true&amp;includeViewParams=true">
+								<i class="fa fa-search"></i>
+							</h:commandLink>
+						</span>
+
+						<h:inputText name="searchParam" class="searchbar form-control" value="#{bookSearch.search}" placeholder="#{msgs_header.searchForBooks}">
+							<f:param name="search" value=""/>
+						</h:inputText>
+						
+						
+						<div class="input-group-btn search-type">
+							<button type="button" class="btn btn-default dropdown-toggle search-dropdown" data-toggle="dropdown">#{msgs_header.title} <span class="caret"></span></button>
+							<ul class="dropdown-menu pull-right">
+								<li><a href="">#{msgs_header.title}</a></li>
+								<li><a href="">#{msgs_header.ISBN}</a></li>
+								<li><a href="">#{msgs_header.author}</a></li>
+								<li><a href="">#{msgs_header.publisher}</a></li>
+								<h:inputHidden id="type" name="type" value="#{bookAction.type}" />
+							</ul>
+						</div>
+					</div>
+					
+				</o:form>
+			</div>
+
+			<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+					menu<br/><i class="fa fa-chevron-down"></i></button>
+
+					<!-- navbar container -->	
+					<div class="collapse navbar-collapse navHeaderCollapse menu">
+						<ul class ="nav navbar-nav navbar-right">
+							<li><a href="#{request.contextPath}/faces/home.xhtml"><i class="fa fa-home fa-lg"></i><br/>#{msgs_header.home}</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									<i class="fa fa-book fa-lg"></i><br/>#{msgs_header.genres}<b class="caret"></b>
+								</a>
+								<ul id="genres-menu" class="dropdown-menu">
+									<ui:repeat var="genre" value="#{genreBean.allGenres}">
+										<li>
+											<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=#{genre.genre}&amp;by=Genre">
+												<c:set var="key" value="#{genre.genre}" />
+												<h:outputText value="#{msgs_header[key]}" />
+											</h:outputLink>
+										</li>
+									</ui:repeat>
+								</ul>
+							</li>
+							<li><a href="contact.xhtml"><i class="fa fa-envelope fa-lg"></i><br/>#{msgs_header.contact}</a></li>
+							<li><a href="helpcenter.xhtml"><i class="fa fa-question fa-lg"></i><br/>#{msgs_header.help}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<o:form id="searchForm2" includeRequestParams="true">
+					<h:commandButton class='hide' action="search?faces-redirect=true&amp;includeViewParams=true" />
+
+				<div class="row mobile-search">	
+					<div class="container">
+						<div class="col-md-6 col-md-offset-3">
+							<div class="input-group">
+						
+								<span class="input-group-addon">
+								 	<h:commandLink action="search?faces-redirect=true&amp;includeViewParams=true">
+										<i class="fa fa-search"></i>
+									</h:commandLink>
+								</span>
+								
+								<h:inputText name="searchParam" class="searchbar form-control" value="#{bookSearch.search}" placeholder="Search for books...">
+									<f:param name="search" value=""/>
+								</h:inputText>
+								
+								<div class="input-group-btn search-type">
+									<button type="button" class="btn btn-default dropdown-toggle search-dropdown" data-toggle="dropdown">#{msgs_header.title} <span class="caret"></span></button>
+									<ul class="dropdown-menu pull-right">
+										<li><a href="">#{msgs_header.title}</a></li>
+										<li><a href="">#{msgs_header.ISBN}</a></li>
+										<li><a href="">#{msgs_header.author}</a></li>
+										<li><a href="">#{msgs_header.publisher}</a></li>
+										<h:inputHidden id="type" name="type" value="#{bookAction.type}" />
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</o:form>
+
+		</div>
+</ui:composition>
+</html>

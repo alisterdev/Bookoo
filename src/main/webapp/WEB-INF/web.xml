@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+   
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Production</param-value>
+    </context-param>
+  
+    <context-param>
+		<param-name>org.richfaces.skin</param-name>
+		<param-value>classic</param-value>
+    </context-param>
+    
+    <context-param>
+	    <param-name>org.richfaces.enableControlSkinning</param-name>
+	    <param-value>false</param-value>
+    </context-param>
+   
+    <!-- *****************Required for file upload***************** -->
+    <context-param>
+        <param-name>org.richfaces.fileUpload.createTempFiles</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- *****************Required for file upload: max file size in bytes***************** -->
+    <context-param>
+        <param-name>org.richfaces.fileUpload.maxRequestSize</param-name>
+        <param-value>1000000000</param-value>
+    </context-param>
+     <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+	    <welcome-file>faces/home.xhtml</welcome-file>
+	</welcome-file-list>
+	
+	
+	<resource-ref>
+      <res-ref-name>jdbc/g2w14</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+   </resource-ref>
+  	
+	<error-page>
+    	<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+    	<location>/faces/home.xhtml</location>
+	</error-page>
+	
+	<error-page>
+	    <error-code>404</error-code>
+	    <location>/faces/404.xhtml</location>
+	</error-page>
+
+	 <context-param>
+    	<param-name>primefaces.THEME</param-name>
+    	<param-value>none</param-value>
+  	</context-param>
+  	   
+</web-app>

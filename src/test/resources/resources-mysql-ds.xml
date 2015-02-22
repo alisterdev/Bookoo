@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <Resource id="jdbc/g2w14" type="DataSource">
+        JdbcDriver com.mysql.jdbc.Driver
+        JdbcUrl jdbc:mysql://waldo2.dawsoncollege.qc.ca:3306/g2w14
+        UserName g2w14
+        Password lamp3rover
+        JtaManaged true
+    </Resource>
+</resources>

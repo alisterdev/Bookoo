@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="search" value="#{invoiceAction.search}"></f:viewParam>
+	<f:viewParam name="by" value="#{invoiceAction.type}"></f:viewParam>
+</f:metadata>
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h3>Orders</h3>
+						<div class="line-content"></div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<o:form id="orderSearchForm" includeRequestParams="true">
+										<h:commandButton class='hide'
+											action="ordersSearch?faces-redirect=true&amp;includeViewParams=true" />
+
+										<div class="input-group">
+
+											<span class="input-group-addon"> <h:commandLink
+													action="ordersSearch?faces-redirect=true&amp;includeViewParams=true">
+													<i class="fa fa-search"></i>
+												</h:commandLink>
+											</span>
+
+											<h:inputText name="searchParam"
+												class="searchbar form-control" value="#{invoiceAction.search}"
+												placeholder="Search for clients...">
+												<f:param name="search" value="" />
+											</h:inputText>
+
+											<div class="input-group-btn search-type">
+												<button type="button"
+													class="btn btn-default dropdown-toggle search-dropdown"
+													data-toggle="dropdown">
+													Sale ID <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right">
+													<li><a href="">Sale ID</a></li>
+													<li><a href="">Client ID</a></li>
+													<h:inputHidden id="type" name="type"
+														value="#{invoiceAction.type}" />
+												</ul>
+											</div>
+										</div>
+									</o:form>
+							</div>
+						</div>
+						<h:form>
+							<h:dataTable id="invoice-list"
+								value="#{invoiceAction.invoiceList}" var="invoice"
+								styleClass="table table-hover table-striped" size="10">
+								<h:column>
+									<f:facet name="header">ID</f:facet>
+				               	#{invoice.saleId}
+				            </h:column>
+								<h:column>
+									<f:facet name="header">Date</f:facet>
+				               	<h:outputText value="#{invoice.saleDate}">
+				               	<f:convertDateTime pattern="EEE, dd MMM yyyy"
+												type="date" />
+								</h:outputText>
+				            </h:column>
+								<h:column>
+									<f:facet name="header">Client Id</f:facet>
+				               	#{invoice.clientId}
+				            </h:column>
+								<h:column>
+									<f:facet name="header">Net Price</f:facet>
+				               	#{invoice.netPrice}
+				            </h:column>
+								<h:column>
+									<f:facet name="header">PST</f:facet>
+									<h:outputText value="#{invoice.PST}">
+										<f:convertNumber maxFractionDigits="2" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">GST</f:facet>
+									<h:outputText value="#{invoice.GST}">
+										<f:convertNumber maxFractionDigits="2" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">HST</f:facet>
+									<h:outputText value="#{invoice.HST}">
+										<f:convertNumber maxFractionDigits="2" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Gross Price</f:facet>
+				               	#{invoice.grossPrice}
+				            </h:column>
+								<h:column>
+									<f:facet name="header">Status</f:facet>
+									<h:commandButton action="#{manageOrder.approuved(invoice)}"
+										rendered="#{invoice.available}"
+										value="#{msgs_review.disapprove}" class="btn btn-bookoo" />
+									<h:commandButton action="#{manageOrder.approuved(invoice)}"
+										rendered="#{not invoice.available}"
+										value="#{msgs_review.approve}" class="btn btn-bookoo" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">View details</f:facet>
+
+
+									<a href="" data-toggle="collapse"
+										data-target="#InvoiceDetails#{invoice.saleId}">
+										<h5>
+											View Details <i class="glyphicon glyphicon-chevron-down"></i>
+										</h5>
+									</a>
+
+									<div class="list-unstyled collapse"
+										id="InvoiceDetails#{invoice.saleId}">
+										<h:dataTable id="invoice-details" class="col-md-10"
+											value="#{invoiceDetailsAction.getInvoiceDetailsBySaleId(invoice)}"
+											var="details" styleClass="table table-hover table-striped">
+											<h:column>
+												<f:facet name="header">Details ID</f:facet>
+				               	#{details.detailsId}
+				            </h:column>
+											<h:column>
+												<f:facet name="header">Book ID</f:facet>
+				               	#{details.bookId}
+				            </h:column>
+											<h:column>
+												<f:facet name="header">Title</f:facet>
+				               	#{details.title}
+				            </h:column>
+											<h:column>
+												<f:facet name="header">Author</f:facet>
+				               	#{details.author}
+				            </h:column>
+											<h:column>
+												<f:facet name="header">Quantity</f:facet>
+				               	#{details.quantity}
+				            </h:column>
+											<h:column>
+												<f:facet name="header">Price</f:facet>
+												<h:outputText value="#{details.bookPrice}">
+													<f:convertNumber type="currency" />
+												</h:outputText>
+
+											</h:column>
+										</h:dataTable>
+
+									</div>
+								</h:column>
+								<h:column>
+
+									<td class="actions"><a href="#" data-toggle="modal"
+										data-target="#banners_#{banner.id}"><i
+											class="fa fa-pencil"></i></a> <h:outputLink href="#">
+											<i class="fa fa-times"></i>
+										</h:outputLink></td>
+
+								</h:column>
+							</h:dataTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

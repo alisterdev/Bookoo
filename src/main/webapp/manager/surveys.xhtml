@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+					
+					<!-- TABLE / REPORTS SECTION -->
+				    <h3> Surveys</h3>
+					<div class="line-content"></div>
+					<div class="row">
+							<div class="col-md-3 col-md-push-10">
+								<button data-toggle="modal" data-target="#surveybox"
+									class="btn btn-bookoo btn-add">Add Survey</button>
+							</div>
+						</div>
+					
+					<h:form>
+					<h:dataTable value="#{surveyAction.allSurveys}" var="surveyT" styleClass="table table-hover table-striped" size="10">
+			               	<h:column>
+								<f:facet name="header">#{msgs_client.Id}</f:facet>
+				               	#{surveyT.surveyId}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Question</f:facet>
+				               	#{surveyT.question}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Option 1</f:facet>
+				               	#{surveyT.option1}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Option 2</f:facet>
+				               	#{surveyT.option2}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Option 3</f:facet>
+				               	#{surveyT.option3}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Option 4</f:facet>
+				               	#{surveyT.option4}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">Option 5</f:facet>
+				               	#{surveyT.option5}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">#{msgs_survey.Result} 1</f:facet>
+				               	#{surveyT.result1}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">#{msgs_survey.Result} 2</f:facet>
+				               	#{surveyT.result2}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">#{msgs_survey.Result} 3</f:facet>
+				               	#{surveyT.result3}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">#{msgs_survey.Result} 4</f:facet>
+				               	#{surveyT.result4}
+				            </h:column>
+			               	<h:column>
+								<f:facet name="header">#{msgs_survey.Result} 5</f:facet>
+				               	#{surveyT.result5}
+				            </h:column>
+							
+							<h:column>
+								<f:facet name="header">Available on Home</f:facet>
+			               		<h:commandButton action="#{survey.approuved(surveyT)}" rendered="#{surveyT.available}" value="#{msgs_survey.Disable}" class="btn btn-bookoo"/>
+			               		<h:commandButton action="#{survey.approuved(surveyT)}" rendered="#{not surveyT.available}" value="#{msgs_survey.Enable}" class="btn btn-bookoo"/>
+				            </h:column> 
+				            
+				            <h:column>
+
+								<td class="actions"><a href="#" data-toggle="modal"
+									data-target="#surveybox_#{surveyT.surveyId}"><i class="fa fa-pencil"></i></a>
+								</td>
+
+							</h:column>
+							<h:column>
+
+								<div class="modal fade" id="surveybox_#{surveyT.surveyId}" tabindex="-1"
+									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+									<div class="modal-dialog edit-item-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">
+														<i class="fa fa-times bookoo-times"></i>
+													</button>
+													<legend>
+														<h:outputText value="Add Survey" />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+															<!-- QUESTION -->
+															<div class="form-group">
+																<h:message class="help-block" for="question" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="question" value="Question" />
+																<div class="col-xs-6">
+																	<h:inputText id="question"
+																	class="form-control" value="#{surveyT.question}"
+																	validator="#{surveyT.validateQuestion}">
+																		<f:ajax event="blur" render="questionError"/>
+																	</h:inputText>
+																	<h:message id="questionError" for="question" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O1 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option1" value="Option 1" />
+																<div class="col-xs-6">
+																	<h:inputText id="option1" name="option1"
+																		class="form-control" value="#{surveyT.option1}"
+																		 validator="#{surveyT.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError1"/>
+																	</h:inputText>
+																	<h:message id="answerError1" for="option1" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O2 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option2" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option2" value="Option 2" />
+																<div class="col-xs-6">
+																	<h:inputText id="option2" name="option2"
+																		class="form-control" value="#{surveyT.option2}"
+																		validator="#{surveyT.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError2"/>
+																	</h:inputText>
+																	<h:message id="answerError2" for="option2" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O3 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option3" value="Option 3" />
+																<div class="col-xs-6">
+																	<h:inputText id="option3" name="option3"
+																		class="form-control" value="#{surveyT.option3}"
+																		validator="#{surveyT.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError3"/>
+																	</h:inputText>
+																	<h:message id="answerError3" for="option3" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O4 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option4" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option1" value="Option 4" />
+																<div class="col-xs-6">
+																	<h:inputText id="option4" name="option4"
+																		class="form-control" value="#{surveyT.option4}"
+																		validator="#{surveyT.validateOptionalAnswer}">
+																		<f:ajax event="blur" render="answerError4"/>
+																	</h:inputText>
+																	<h:message id="answerError4" for="option4" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O5 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option5" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option5" value="Option 5" />
+																<div class="col-xs-6">
+																	<h:inputText id="option5" name="option5"
+																		class="form-control" value="#{surveyT.option5}"
+																		validator="#{surveyT.validateOptionalAnswer}">
+																		<f:ajax event="blur" render="answerError5"/>
+																	</h:inputText>
+																	<h:message id="answerError5" for="option5" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- R1 -->
+															<div class="form-group">
+																<h:message class="help-block" for="result1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="result1" value="Result 1" />
+																<div class="col-xs-6">
+																	<h:inputText id="result1" name="result1"
+																		class="form-control" value="#{surveyT.result1}"
+																		validator="#{surveyT.validateResult}">
+																		<f:ajax event="blur" render="answerResult1"/>
+																	</h:inputText>
+																	<h:message id="answerResult1" for="result1" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- R2 -->
+															<div class="form-group">
+																<h:message class="help-block" for="result2" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="result2" value="Result 2" />
+																<div class="col-xs-6">
+																	<h:inputText id="result2" name="result2"
+																		class="form-control" value="#{surveyT.result2}"
+																		validator="#{surveyT.validateResult}">
+																		<f:ajax event="blur" render="answerResult2"/>
+																	</h:inputText>
+																	<h:message id="answerResult2" for="result2" class="inputError"/>
+																</div>
+															</div>
+															
+															<!-- R3 -->
+															<div class="form-group">
+																<h:message class="help-block" for="result1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="result3" value="Result 3" />
+																<div class="col-xs-6">
+																	<h:inputText id="result3" name="result3"
+																		class="form-control" value="#{surveyT.result3}"
+																		validator="#{surveyT.validateResult}">
+																		<f:ajax event="blur" render="answerResult3"/>
+																	</h:inputText>
+																	<h:message id="answerResult3" for="result3" class="inputError"/>
+																</div>
+															</div>
+															
+															<!-- R4 -->
+															<div class="form-group">
+																<h:message class="help-block" for="result4" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="result1" value="Result 4" />
+																<div class="col-xs-6">
+																	<h:inputText id="result4" name="result4"
+																		class="form-control" value="#{surveyT.result4}"
+																		validator="#{surveyT.validateResult}">
+																		<f:ajax event="blur" render="answerResult4"/>
+																	</h:inputText>
+																	<h:message id="answerResult4" for="result4" class="inputError"/>
+																</div>
+															</div>
+															
+															<!-- R5 -->
+															<div class="form-group">
+																<h:message class="help-block" for="result5" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="result5" value="Result 5" />
+																<div class="col-xs-6">
+																	<h:inputText id="result5" name="result5"
+																		class="form-control" value="#{surveyT.result5}"
+																		validator="#{surveyT.validateResult}">
+																		<f:ajax event="blur" render="answerResult5"/>
+																	</h:inputText>
+																	<h:message id="answerResult5" for="result5" class="inputError"/>
+																</div>
+															</div>
+															
+															
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton class="btn btn-bookoo" action="#{surveyAction.updateSurvey(surveyT) }" value="Update" />
+												</div>
+
+											</h:form>
+										</div>
+									</div>
+								</div>
+							</h:column>
+		            </h:dataTable>			            
+		            </h:form>
+		            
+		            <div class="modal fade" id="surveybox" tabindex="-1"
+									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+									<div class="modal-dialog edit-item-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">
+														<i class="fa fa-times bookoo-times"></i>
+													</button>
+													<legend>
+														<h:outputText value="Add Survey" />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+															<!-- QUESTION -->
+															<div class="form-group">
+																<h:message class="help-block" for="question" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="question" value="Question" />
+																<div class="col-xs-6">
+																	<h:inputText id="question"
+																	class="form-control" value="#{surveyBean.question}"
+																	validator="#{surveyBean.validateQuestion}">
+																		<f:ajax event="blur" render="questionError"/>
+																	</h:inputText>
+																	<h:message id="questionError" for="question" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O1 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option1" value="Option 1" />
+																<div class="col-xs-6">
+																	<h:inputText id="option1" name="option1"
+																		class="form-control" value="#{surveyBean.option1}"
+																		 validator="#{surveyBean.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError1"/>
+																	</h:inputText>
+																	<h:message id="answerError1" for="option1" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O2 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option2" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option2" value="Option 2" />
+																<div class="col-xs-6">
+																	<h:inputText id="option2" name="option2"
+																		class="form-control" value="#{surveyBean.option2}"
+																		validator="#{surveyBean.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError2"/>
+																	</h:inputText>
+																	<h:message id="answerError2" for="option2" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O3 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option1" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option3" value="Option 3" />
+																<div class="col-xs-6">
+																	<h:inputText id="option3" name="option3"
+																		class="form-control" value="#{surveyBean.option3}"
+																		validator="#{surveyBean.validateMandatoryAnswer}">
+																		<f:ajax event="blur" render="answerError3"/>
+																	</h:inputText>
+																	<h:message id="answerError3" for="option3" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O4 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option4" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option1" value="Option 4" />
+																<div class="col-xs-6">
+																	<h:inputText id="option4" name="option4"
+																		class="form-control" value="#{surveyBean.option4}"
+																		validator="#{surveyBean.validateOptionalAnswer}">
+																		<f:ajax event="blur" render="answerError4"/>
+																	</h:inputText>
+																	<h:message id="answerError4" for="option4" class="inputError"/>
+																		
+																</div>
+															</div>
+															
+															<!-- O5 -->
+															<div class="form-group">
+																<h:message class="help-block" for="option5" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="option5" value="Option 5" />
+																<div class="col-xs-6">
+																	<h:inputText id="option5" name="option5"
+																		class="form-control" value="#{surveyBean.option5}"
+																		validator="#{surveyBean.validateOptionalAnswer}">
+																		<f:ajax event="blur" render="answerError5"/>
+																	</h:inputText>
+																	<h:message id="answerError5" for="option5" class="inputError"/>
+																		
+																</div>
+															</div>
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton class="btn btn-bookoo" action="#{surveyAction.insertSurvey(surveyBean) }" value="Add" />
+												</div>
+
+											</h:form>
+										</div>
+									</div>
+								</div>
+			            </div>
+		            </div>
+	            </div>
+	        </h:body>
+		</ui:define>
+	</ui:composition>
+</html>

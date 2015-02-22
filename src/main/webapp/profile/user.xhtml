@@ -1,0 +1,566 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+
+			<h:outputStylesheet library="css" name="registration.css"></h:outputStylesheet>
+			<h:outputStylesheet library="css" name="profile.css"></h:outputStylesheet>
+
+			<div class="container main-content">
+				<div class="row header">
+					<!-- header row -->
+					<h2 class="header-title">Edit Profile</h2>
+					<p class="header-info">Make changes to your profile information</p>
+					<div class="line-content"></div>
+					<div class="alert-message">
+						<div class="alert alert-success">Your profile was
+							successfully updated!</div>
+					</div>
+				</div>
+				<br />
+				<div class="row">
+					<!-- content row -->
+					<div class="col-md-3 col-md-offset-1 profile-nav">
+						<ul class="nav nav-pills nav-stacked">
+							<li class="active"><a href="#purchases" data-toggle="tab"><i
+									class="fa fa-shopping-cart"></i> Purchase History</a></li>
+							<li><a href="#personal" data-toggle="tab"><i
+									class="fa fa-user"></i> Personal Information</a></li>
+							<li><a href="#billing" data-toggle="tab"><i
+									class="fa fa-credit-card"></i> Billing Information</a></li>
+							<li><a href="#shipping" data-toggle="tab"><i
+									class="fa fa-truck"></i> Shipping Information</a></li>
+							<li><a href="#security" data-toggle="tab"><i
+									class="fa fa-lock"></i> Security Information</a></li>
+						</ul>
+					</div>
+					<!-- UPDATE PROFILE Information form -->
+
+					<div class="col-md-8 tab-content">
+						<!-- PURCHASE HISTORY -->
+						<div class="tab-pane active" id="purchases">
+							<legend>
+								<i class="fa fa-shopping-cart"></i>
+								<h:outputText value=" Purchase History" />
+							</legend>
+
+							<h:dataTable id="user-purchases"
+								value="#{invoiceAction.getAllInvoicesByClientId(userSession.client.id)}"
+								var="invoice" styleClass="table table-hover table-striped"
+								size="10">
+								<h:column>
+									<f:facet name="header">Order#</f:facet>
+				               	#{invoice.saleId}
+				            	</h:column>
+								<h:column>
+									<f:facet name="header">Date</f:facet>
+				               	#{invoice.formattedSaleDate}
+				            	</h:column>
+								<h:column>
+									<f:facet name="header">Price</f:facet>
+				               	$#{invoice.grossPrice}
+				            	</h:column>
+
+								<!-- Detailed table of the purchase -->
+								<h:column>
+									<f:facet name="header">Details</f:facet>
+									<a href="" data-toggle="collapse"
+										data-target="#InvoiceDetails#{invoice.saleId}">
+										<h5>
+											View Details <i class="glyphicon glyphicon-chevron-down"></i>
+										</h5>
+									</a>
+									<div class="list-unstyled collapse sale-details"
+										id="InvoiceDetails#{invoice.saleId}">
+										<hr />
+										<h:dataTable id="invoice-details" class="col-md-8"
+											value="#{invoiceDetailsAction.getInvoiceDetailsBySaleId(invoice)}"
+											var="details" styleClass="table table-hover table-striped">
+											<h:column>
+												<f:facet name="header">Item</f:facet>
+												<h5>
+													<h:outputLink id="bookLink"
+														value="#{request.contextPath}/faces/book.xhtml">
+					               					#{details.title}
+													<f:param name="bookId" value="#{details.bookId}" />
+													</h:outputLink>
+												</h5>
+												<p>by #{details.author}</p>
+											</h:column>
+											<h:column>
+												<f:facet name="header">Quantity</f:facet>
+				               				#{details.quantity}
+				            				</h:column>
+											<h:column>
+												<f:facet name="header">Price</f:facet>
+												<h:outputText value="#{details.bookPrice}">
+													<f:convertNumber type="currency" />
+												</h:outputText>
+											</h:column>
+											<h:column>
+												<h:outputLink rendered="#{not empty details.downloadLink}"
+													value="#{details.downloadLink}"
+													class="btn btn-bookoo btn-add download" target="_blank">Download</h:outputLink>
+											</h:column>
+										</h:dataTable>
+									</div>
+								</h:column>
+								<h:panelGroup layout="block"
+									rendered="#{empty (invoiceAction.getAllInvoicesByClientId(userSession.client.id))}">
+									<h5>Your don't have any purchases yet.</h5>
+								</h:panelGroup>
+							</h:dataTable>
+						</div>
+
+						<!-- PERSONAL -->
+						<div class="tab-pane" id="personal">
+							<legend>
+								<i class="fa fa-user"></i>
+								<h:outputText value=" #{msgs_register.PersonalInformation}" />
+							</legend>
+							<h:form id="updatePersonalInfoForm" class="form-horizontal"
+								role="form">
+								<!-- TITLE -->
+								<div class="form-group">
+									<h:message class="help-block" for="title" />
+									<h:outputLabel class="col-sm-4 control-label" for="title"
+										value="Title" />
+									<div class="col-sm-2">
+										<h:selectOneMenu id="etitle" name="title"
+											class="form-control input-sm"
+											value="#{userSession.client.title}" required="true">
+											<f:selectItem itemLabel="Mr." itemValue="Mr." />
+											<f:selectItem itemLabel="#{msgs_register.Ms}" itemValue="Ms." />
+											<f:selectItem itemLabel="#{msgs_register.Mrs}"
+												itemValue="Mrs." />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- FIRST NAME -->
+								<div class="form-group">
+									<h:message class="help-block" for="firstname" />
+									<h:outputLabel class="col-sm-4 control-label" for="firstname"
+										value="#{msgs_register.FirstName}" />
+									<div class="col-sm-6">
+										<h:inputText id="efirstname" name="firstname"
+											placeholder="Stephen" class="form-control"
+											value="#{userSession.client.firstName}" required="true">
+											<f:validateRegex pattern="^[a-zA-Z]+((\\-)[a-zA-Z]+)?$" />
+										</h:inputText>
+									</div>
+								</div>
+
+								<!-- LAST NAME -->
+								<div class="form-group">
+									<h:message class="help-block" for="lastname" />
+									<h:outputLabel class="col-sm-4 control-label" for="lastname"
+										value="#{msgs_register.LastName}" />
+									<div class="col-sm-6">
+										<h:inputText id="elastname" name="lastname" placeholder="King"
+											class="form-control" value="#{userSession.client.lastName}"
+											required="true" />
+									</div>
+								</div>
+
+								<!-- COMPANY -->
+								<div class="form-group">
+									<h:message class="help-block" for="company" />
+									<h:outputLabel class="col-sm-4 control-label" for="company"
+										value="#{msgs_register.Company}" />
+									<div class="col-sm-6">
+										<h:inputText id="ecompany" name="company"
+											placeholder="Bookoo Inc" class="form-control"
+											value="#{userSession.client.companyName}" />
+									</div>
+								</div>
+
+								<!-- PHONE NUMBER -->
+								<div class="form-group">
+									<h:message class="help-block" for="phonenumber"></h:message>
+									<h:outputLabel class="col-sm-4 control-label" for="phonenumber"
+										value="#{msgs_register.PhoneNumber}" />
+									<div class="col-sm-4">
+										<h:inputText id="ephonenumber" placeholder="(514) 999-9999"
+											value="#{userSession.client.phoneNumber}"
+											class="form-control" required="true" validatorMessage="" />
+									</div>
+								</div>
+
+								<!-- CELL NUMBER -->
+								<div class="form-group">
+									<h:message class="help-block" for="cellnumber"></h:message>
+									<h:outputLabel class="col-sm-4 control-label" for="cellnumber"
+										value="#{msgs_register.CellNumber}" />
+									<div class="col-sm-4">
+										<h:inputText id="ecellnumber" placeholder="(514) 999-9999"
+											value="#{userSession.client.cellNumber}" class="form-control"
+											validatorMessage="" />
+									</div>
+								</div>
+
+								<!-- EMAIL -->
+								<div class="form-group">
+									<h:message class="help-block" for="email" />
+									<h:outputLabel class="col-sm-4 control-label" for="email"
+										value="#{msgs_register.Email}" />
+									<div class="col-sm-6">
+										<h:inputText id="eemail" name="email"
+											placeholder="stephenking@email.com" class="form-control"
+											value="#{userSession.client.email}" required="true" />
+									</div>
+								</div>
+								<div class="buttons-container btn-single">
+									<h:commandButton value="Update" class="btn btn-bookoo"
+										action="#{userSession.updateProfile}">
+										<f:ajax execute="@form" event="click" />
+									</h:commandButton>
+								</div>
+							</h:form>
+						</div>
+						<!-- CLOSE PERSONAL -->
+
+						<!-- BILLING  -->
+						<div class="tab-pane" id="billing">
+							<legend>
+								<i class="fa fa-credit-card"></i>
+								<h:outputText value=" #{msgs_register.BillingInformation}" />
+							</legend>
+							<h:form id="updateBillingInfoForm" class="form-horizontal"
+								role="form">
+								<!-- ADDRESS 1 -->
+								<div class="form-group">
+									<h:message class="help-block" for="address1" />
+									<h:outputLabel class="col-sm-4 control-label" for="address1"
+										value="#{msgs_register.Address1}" />
+									<div class="col-sm-6">
+										<h:inputText id="eaddress1" name="address1"
+											placeholder="1234 Noname St" class="form-control"
+											value="#{userSession.client.address1}" required="true" />
+									</div>
+								</div>
+
+								<!-- ADDRESS 2 -->
+								<div class="form-group">
+									<h:message class="help-block" for="address2" />
+									<h:outputLabel class="col-sm-4 control-label" for="address2"
+										value="#{msgs_register.Address2}" />
+									<div class="col-sm-6">
+										<h:inputText id="eaddress2" name="address2"
+											placeholder="Apt 1" class="form-control"
+											value="#{userSession.client.address2}" />
+									</div>
+								</div>
+
+								<!-- CITY -->
+								<div class="form-group">
+									<h:message class="help-block" for="city" />
+									<h:outputLabel class="col-sm-4 control-label" for="city"
+										value="#{msgs_register.City}" />
+									<div class="col-sm-6">
+										<h:inputText id="ecity" name="city" placeholder="Montreal"
+											class="form-control" value="#{userSession.client.city}"
+											required="true" />
+									</div>
+								</div>
+
+								<!-- PROVINCE -->
+								<div class="form-group">
+									<h:message class="help-block" for="province" />
+									<h:outputLabel class="col-sm-4 control-label" for="province"
+										value="#{msgs_register.Province}" />
+									<div class="col-sm-4">
+										<h:selectOneMenu id="eprovince" name="province"
+											class="form-control input-sm"
+											value="#{userSession.client.province}" required="true">
+											<f:selectItem itemLabel="Alberta" itemValue="AB" />
+											<f:selectItem itemLabel="#{msgs_register.BC}" itemValue="BC" />
+											<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+											<f:selectItem itemLabel="#{msgs_register.NB}" itemValue="NB" />
+											<f:selectItem itemLabel="#{msgs_register.NL}" itemValue="NL" />
+											<f:selectItem itemLabel="#{msgs_register.NS}" itemValue="NS" />
+											<f:selectItem itemLabel="#{msgs_register.NT}" itemValue="NT" />
+											<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+											<f:selectItem itemLabel="Ontario" itemValue="ON" />
+											<f:selectItem itemLabel="#{msgs_register.PE}" itemValue="PE" />
+											<f:selectItem itemLabel="#{msgs_register.QC}" itemValue="QC" />
+											<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+											<f:selectItem itemLabel="Yukon" itemValue="YT" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- COUNTRY -->
+								<div class="form-group">
+									<h:message class="help-block" for="country" />
+									<h:outputLabel class="col-sm-4 control-label" for="country"
+										value="#{msgs_register.Country}" />
+									<div class="col-sm-4">
+										<h:selectOneMenu id="ecountry" name="country"
+											class="form-control input-sm"
+											value="#{userSession.client.country}" required="true">
+											<f:selectItem itemLabel="Canada" itemValue="Canada" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- POSTAL CODE -->
+								<div class="form-group">
+									<h:message class="help-block" for="postalcode" />
+									<h:outputLabel class="col-sm-4  control-label" for="postalcode"
+										value="#{msgs_register.PostalCode}" />
+									<div class="col-sm-3">
+										<h:inputText id="epostalcode" name="postalcode"
+											placeholder="H1H 1H1" class="form-control"
+											value="#{userSession.client.postalCode}" required="true" />
+									</div>
+								</div>
+								<div class="buttons-container btn-single">
+									<h:commandButton value="Update" class="btn btn-bookoo"
+										action="#{userSession.updateProfile}">
+										<f:ajax execute="@form" event="click" />
+									</h:commandButton>
+								</div>
+							</h:form>
+						</div>
+						<!-- CLOSE BILLING -->
+
+						<!-- SHIPPING  -->
+						<div class="tab-pane" id="shipping">
+							<legend>
+								<i class="fa fa-truck"></i>
+								<h:outputText value=" Shipping Information" />
+							</legend>
+							<h:form id="updateShippingInfoForm" class="form-horizontal"
+								role="form">
+								<!-- TITLE -->
+								<div class="form-group">
+									<h:message class="help-block" for="title" />
+									<h:outputLabel class="col-sm-4 control-label" for="title"
+										value="Title" />
+									<div class="col-sm-2">
+										<h:selectOneMenu id="stitle" name="title"
+											class="form-control input-sm"
+											value="#{userSession.client.shipTitle}" required="true">
+											<f:selectItem itemLabel="Mr." itemValue="Mr." />
+											<f:selectItem itemLabel="#{msgs_register.Ms}" itemValue="Ms." />
+											<f:selectItem itemLabel="#{msgs_register.Mrs}"
+												itemValue="Mrs." />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- FIRST NAME -->
+								<div class="form-group">
+									<h:message class="help-block" for="firstname" />
+									<h:outputLabel class="col-sm-4 control-label" for="firstname"
+										value="#{msgs_register.FirstName}" />
+									<div class="col-sm-6">
+										<h:inputText id="sfirstname" name="firstname"
+											placeholder="Stephen" class="form-control"
+											value="#{userSession.client.shipFirstName}" required="true">
+											<f:validateRegex pattern="^[a-zA-Z]+((\\-)[a-zA-Z]+)?$" />
+										</h:inputText>
+									</div>
+								</div>
+
+								<!-- LAST NAME -->
+								<div class="form-group">
+									<h:message class="help-block" for="lastname" />
+									<h:outputLabel class="col-sm-4 control-label" for="lastname"
+										value="#{msgs_register.LastName}" />
+									<div class="col-sm-6">
+										<h:inputText id="slastname" name="lastname" placeholder="King"
+											class="form-control"
+											value="#{userSession.client.shipLastName}" required="true" />
+									</div>
+								</div>
+
+								<!-- COMPANY -->
+								<div class="form-group">
+									<h:message class="help-block" for="company" />
+									<h:outputLabel class="col-sm-4 control-label" for="company"
+										value="#{msgs_register.Company}" />
+									<div class="col-sm-6">
+										<h:inputText id="scompany" name="company"
+											placeholder="Bookoo Inc" class="form-control"
+											value="#{userSession.client.shipCompanyName}" />
+									</div>
+								</div>
+
+
+								<!-- ADDRESS 1 -->
+								<div class="form-group">
+									<h:message class="help-block" for="address1" />
+									<h:outputLabel class="col-sm-4 control-label" for="address1"
+										value="#{msgs_register.Address1}" />
+									<div class="col-sm-6">
+										<h:inputText id="saddress1" name="address1"
+											placeholder="1234 Noname St" class="form-control"
+											value="#{userSession.client.shipAddress1}" required="true" />
+									</div>
+								</div>
+
+								<!-- ADDRESS 2 -->
+								<div class="form-group">
+									<h:message class="help-block" for="address2" />
+									<h:outputLabel class="col-sm-4 control-label" for="address2"
+										value="#{msgs_register.Address2}" />
+									<div class="col-sm-6">
+										<h:inputText id="saddress2" name="address2"
+											placeholder="Apt 1" class="form-control"
+											value="#{userSession.client.shipAddress2}" />
+									</div>
+								</div>
+
+								<!-- CITY -->
+								<div class="form-group">
+									<h:message class="help-block" for="city" />
+									<h:outputLabel class="col-sm-4 control-label" for="city"
+										value="#{msgs_register.City}" />
+									<div class="col-sm-6">
+										<h:inputText id="scity" name="city" placeholder="Montreal"
+											class="form-control" value="#{userSession.client.shipCity}"
+											required="true" />
+									</div>
+								</div>
+
+								<!-- PROVINCE -->
+								<div class="form-group">
+									<h:message class="help-block" for="sprovince" />
+									<h:outputLabel class="col-sm-4 control-label" for="sprovince"
+										value="#{msgs_register.Province}" />
+									<div class="col-sm-4">
+										<h:selectOneMenu id="sprovince" name="sprovince"
+											class="form-control input-sm"
+											value="#{userSession.client.shipProvince}" required="true">
+											<f:selectItem itemLabel="Alberta" itemValue="AB" />
+											<f:selectItem itemLabel="#{msgs_register.BC}" itemValue="BC" />
+											<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+											<f:selectItem itemLabel="#{msgs_register.NB}" itemValue="NB" />
+											<f:selectItem itemLabel="#{msgs_register.NL}" itemValue="NL" />
+											<f:selectItem itemLabel="#{msgs_register.NS}" itemValue="NS" />
+											<f:selectItem itemLabel="#{msgs_register.NT}" itemValue="NT" />
+											<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+											<f:selectItem itemLabel="Ontario" itemValue="ON" />
+											<f:selectItem itemLabel="#{msgs_register.PE}" itemValue="PE" />
+											<f:selectItem itemLabel="#{msgs_register.QC}" itemValue="QC" />
+											<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+											<f:selectItem itemLabel="Yukon" itemValue="YT" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- COUNTRY -->
+								<div class="form-group">
+									<h:message class="help-block" for="country" />
+									<h:outputLabel class="col-sm-4 control-label" for="country"
+										value="#{msgs_register.Country}" />
+									<div class="col-sm-4">
+										<h:selectOneMenu id="scountry" name="country"
+											class="form-control input-sm"
+											value="#{userSession.client.shipCountry}" required="true">
+											<f:selectItem itemLabel="Canada" itemValue="Canada" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+
+								<!-- POSTAL CODE -->
+								<div class="form-group">
+									<h:message class="help-block" for="postalcode" />
+									<h:outputLabel class="col-sm-4  control-label" for="postalcode"
+										value="#{msgs_register.PostalCode}" />
+									<div class="col-sm-3">
+										<h:inputText id="spostalcode" name="postalcode"
+											placeholder="H1H 1H1" class="form-control"
+											value="#{userSession.client.shipPostalCode}" required="true" />
+									</div>
+								</div>
+								<div class="buttons-container btn-single">
+									<h:commandButton value="Update" class="btn btn-bookoo"
+										action="#{userSession.updateProfile}">
+										<f:ajax execute="@form" event="click" />
+									</h:commandButton>
+								</div>
+							</h:form>
+						</div>
+						<!-- CLOSE SHIPPING -->
+
+						<!-- SECURITY -->
+						<div class="tab-pane" id="security">
+							<legend>
+								<i class="fa fa-lock"></i>
+								<h:outputText value=" Security Information" />
+							</legend>
+							<!-- OLD PASSORD -->
+							<h:form id="updateSecurityInfoForm" class="form-horizontal"
+								role="form">
+								<div class="form-group">
+									<h:outputLabel class="col-sm-4 control-label" for="oldPassword"
+										value="Old Password" />
+									<div class="col-sm-6">
+										<h:inputSecret id="oldPassword" name="oldPassword"
+											label="Old Password" placeholder="Password"
+											class="form-control" value="#{userSession.inputPassword}"
+											validator="#{clientBean.validateOldPassword}" required="true">
+											<f:ajax event="blur" render="oldPasswordError" />
+										</h:inputSecret>
+										<h:message id="oldPasswordError" for="oldPassword"
+											class="inputError" />
+									</div>
+								</div>
+
+								<!-- NEW PASSORD -->
+								<div class="form-group">
+									<h:outputLabel class="col-sm-4 control-label" for="newPassword"
+										value="New Password" />
+									<div class="col-sm-6">
+										<h:inputSecret id="password" name="password"
+											class="form-control" value="#{userSession.client.password}"
+											label="New Password" required="true" placeholder="Password">
+											<f:ajax event="blur" render="passwordError" />
+										</h:inputSecret>
+										<h:message id="passwordError" for="password"
+											class="inputError" />
+									</div>
+								</div>
+								<!-- CONFIRM PASSORD -->
+								<div class="form-group">
+									<h:outputLabel class="col-sm-4 control-label"
+										for="newPasswordConfirm" value="Confirm Password" />
+									<div class="col-sm-6">
+										<h:inputSecret id="confirmpassword" name="confirmpassword"
+											class="form-control"
+											validator="#{clientBean.validatePasswordMatch}"
+											label="Confirm Password" required="true"
+											placeholder="Password">
+											<f:ajax execute="password confirmpassword" event="blur"
+												resetValues="true" render="passwordsDontMatchError" />
+										</h:inputSecret>
+										<h:message id="passwordsDontMatchError" for="confirmpassword"
+											class="inputError" />
+									</div>
+								</div>
+
+								<!-- SAVE BUTTON -->
+								<div class="buttons-container btn-single">
+									<h:commandButton value="Update" class="btn btn-bookoo"
+										action="#{userSession.updatePassword}" />
+								</div>
+							</h:form>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

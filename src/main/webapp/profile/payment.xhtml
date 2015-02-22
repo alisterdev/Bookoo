@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container main-content">
+
+				<!-- Shopping Cart / Checkout Navigation -->
+				<div class="row form-group">
+					<ul id="breadcrumb" class="col-md-12 navsetup well">
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-shopping-cart fa-lg"></i><br />Confirm your order</a></li>
+						<li class="active col-md-4"><a href="#"><i
+								class="fa fa-share fa-lg"></i><br />#{msgs_cart.checkOut}</a></li>
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-file-text-o fa-lg"></i><br />#{msgs_cart.placeOrder}</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- FINALIZATION -->
+				<div class="row navsection" id="finalization">
+					<div class="col-xs-12">
+						<div class="col-md-12 well">
+							<div class='col-md-8'>
+								<h:form>
+									<div class="col-sm-12">
+
+										<div class="row header">
+											<!-- header row -->
+											<h2 class="header-title">Payment</h2>
+											<p class="header-info">Please provide your payment
+												information</p>
+											<div class="line-content"></div>
+										</div>
+
+										<div class="row">
+											<div class='col-xs-8 form-group required'>
+												<label class='control-label'>Card holder name</label>
+												<h:inputText id="cardName" name="cardName"
+													value="#{paymentBean.fullName}" class='form-control'
+													required="true" requiredMessage="Please enter a valid name">
+													<f:ajax event="blur" render="cardNameError" />
+												</h:inputText>
+												<h:message id="cardNameError" for="cardName"
+													class="inputError" />
+											</div>
+										</div>
+
+										<div class="row">
+											<div class='col-xs-6 col-md-5 form-group card required'>
+												<label class='control-label'>Credit Card Number</label>
+												<h:inputText id="cardNum" name="cardNum"
+													value="#{paymentBean.card}" label="credit card number"
+													class='form-control card-number' maxlength='16'
+													required="true"
+													requiredMessage="Please enter a valid card number!" />
+												<h:message id="cardNumError" for="cardNum"
+													class="inputError" />
+											</div>
+											<div class='col-xs-3 col-md-3 form-group expiration required'>
+												<label class='control-label'>Expiration Date</label>
+												<h:inputText id="expiry" name="expiry"
+													value="#{paymentBean.date}" placeholder='MM/yyyy'
+													class='form-control' size='2' required="true"
+													validatorMessage="Please enter a valid expiry date!">
+													<f:convertDateTime pattern="MM/yyyy" />
+												</h:inputText>
+												<h:message id="expiryError" for="expiry" class="inputError" />
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class='col-md-12'>
+												<div class="buttons-container btn-double">
+													<h:commandButton value="Confirm Order"
+														class="btn btn-bookoo btn-add"
+														action="#{invoiceAction.forwardPurchase}" />
+
+													<h:commandButton style="margin-left: 15px;" id="clear"
+														value="#{msgs_register.Clear}" class="btn btn-bookoo" />
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:form>
+							</div>
+
+							<div class="col-sm-4">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">
+											<h:outputText value="Order Summary"></h:outputText>
+										</h3>
+									</div>
+									<div class="panel-body">
+										<div class="row">
+											<h:outputLabel class="col-xs-8" id="subTotallbl"
+												for="subTotal" value="Sub-Total:" />
+											<h:outputText class="col-xs-4" id="subTotal" name="subTotal"
+												value="#{shoppingCart.subTotal}">
+												<f:convertNumber type="currency" maxFractionDigits="2"
+													minFractionDigits="2" />
+											</h:outputText>
+										</div>
+										<div class="row">
+											<h:outputLabel class="col-xs-8" id="taxlbl" for="taxTotal"
+												value="Taxes:" />
+											<h:outputText class="col-xs-4" id="taxTotal" name="taxTotal"
+												value="#{shoppingCart.calculatedTaxes}">
+												<f:convertNumber type="currency" maxFractionDigits="2"
+													minFractionDigits="2" />
+											</h:outputText>
+										</div>
+										<div class="row">
+											<h:outputLabel class="col-xs-8" id="shippinglbl"
+												for="shipTotal" value="Shipping and Handling:" />
+											<h:outputText class="col-xs-4" id="shipTotal"
+												name="shipTotal" value="$0.00">
+											</h:outputText>
+										</div>
+
+										<div class="row">
+											<h4>
+												<div class="line-content"></div>
+												<h:outputLabel class="col-xs-8" id="grandlbl"
+													for="grandTotal" value="Total:" />
+												<h:outputText id="grandTotal" name="grandTotal"
+													value="#{shoppingCart.grandTotal}">
+													<f:convertNumber type="currency" maxFractionDigits="2"
+														minFractionDigits="2" />
+												</h:outputText>
+											</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- CLOSE FINALIZATION -->
+
+			</div>
+		</h:body>
+	</ui:define>
+
+</ui:composition>
+</html>

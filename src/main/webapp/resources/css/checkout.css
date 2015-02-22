@@ -1,0 +1,125 @@
+/*********************************************************
+*********** BOOKOO CSS Styling for Checkout    ***********
+*********** by Alex Ilea / Darrel-Day Guerrero ***********
+*********** Bookoo Bookstore. Copyright 2014.  ***********
+*********************************************************/
+
+
+/******************
+** GENERIC ITEMS **
+*******************/
+
+.checkout-content { background: #eee; }
+.cartitem { margin-top: 15px; }
+.book-info {padding-left: 30px;}
+
+.line-content {
+	border-top: solid 1px #ffda39;
+	padding-bottom:15px;
+}
+
+.update-link {
+	color: #666;
+	margin: 0;
+	padding: 0;
+	outline: 0;
+	text-decoration: none;
+}
+.update-link:hover{color: #ecbf00;}
+
+.carttitle {
+	font-size:20px;
+	font-weight:bold;
+}
+
+.brand-title {
+	font-family: 'Raleway-Bold', sans-serif;
+	font-weight: 700;
+	font-size: 40px;
+	color: #ffda39;
+	text-shadow: 4px 4px #444;
+	text-decoration: none;
+}
+
+/********************************
+** CHECKOUT PROCESS NAV STYLES **
+********************************/
+
+#breadcrumb {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#breadcrumb li { float: left; }
+#breadcrumb li:first-child { padding-left: 0px; }
+#breadcrumb li:last-child { padding-right: 0px; }
+#breadcrumb li:first-child a:before { border: none; }
+#breadcrumb li:last-child a:after { border: none; }
+
+/* item style */
+#breadcrumb li a {
+  display: block;
+  position: relative;
+  padding: 15px;
+  height: 60px;
+  background: #eee;
+  font-size:14px;
+  color: #666;
+  text-decoration: none;
+  text-align: center;
+}
+
+/* arrow endings */
+#breadcrumb li a:before, #breadcrumb li a:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  border: 0 solid #eee;
+  border-width: 30px 10px;
+  width: 0;
+  height: 0;
+}
+
+#breadcrumb li a:before {
+  left: -20px;
+  border-left-color: transparent;
+}
+
+#breadcrumb li a:after {
+  left: 100%;
+  border-color: transparent;
+  border-left-color: #eee;
+}
+
+/* CUSTOM STYLES FOR ACTIVE PART OF THE CHECKOUT PROCESS */
+ 
+#breadcrumb li.active:first-child a:before { border: none; }
+#breadcrumb li.active:last-child a:after { border: none; }
+#breadcrumb li.active a { background: #ffda39; }
+
+#breadcrumb li.active a:before { 
+  content: "";
+  position: absolute;
+  top: 0;
+  border: 0 solid #ffda39;
+  border-width: 30px 10px;
+  width: 0;
+  height: 0;
+}
+
+#breadcrumb li.active a:before {
+  left: -20px;
+  border-left-color: transparent;
+}
+
+#breadcrumb li.active a:after {
+  left: 100%;
+  border-color: transparent;
+  border-left-color: #ffda39;
+}
+
+

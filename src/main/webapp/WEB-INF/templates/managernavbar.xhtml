@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+<ui:composition>
+	<div class="col-md-2">
+        <!-- LEFT NAVIGATION BAR SECTION -->
+        <hr/>
+      		<h5><i class="glyphicon glyphicon-wrench"></i> #{msgs_manager_navbar.controlPanel}</h5>
+        <hr/>
+	        
+        <ul class="list-unstyled">
+          <li class="nav-header"> 
+	            <a data-toggle="collapse" data-target="#managementMenu">
+	              <h5>#{msgs_manager_navbar.management}<i class="glyphicon glyphicon-chevron-right"></i></h5>
+	            </a>
+	            <ul class="list-unstyled collapse in" id="managementMenu">
+	              <li><a href="/g2w14/faces/manager/inventory.xhtml"><i class="fa fa-book"></i> #{msgs_manager_navbar.inventory}</a></li>
+	              <li><a href="/g2w14/faces/manager/clients.xhtml"><i class="fa fa-user"></i> #{msgs_manager_navbar.clients}</a></li>
+	              <li><a href="/g2w14/faces/manager/orders.xhtml"><i class="fa fa-truck"></i> #{msgs_manager_navbar.orders} </a></li>
+	              <li><a href="/g2w14/faces/manager/reviews.xhtml"><i class="fa fa-list-alt"></i> #{msgs_manager_navbar.reviews} </a></li>
+	              <li><a href="/g2w14/faces/manager/newsfeeds.xhtml"><i class="fa fa-rss"></i> #{msgs_manager_navbar.newsfeeds} </a></li>
+	              <li><a href="/g2w14/faces/manager/surveys.xhtml"><i class="fa fa-list-ul"></i> #{msgs_manager_navbar.surveys} </a></li>
+	              <li><a href="/g2w14/faces/manager/banners.xhtml"><i class="fa fa-bullhorn"></i> #{msgs_manager_navbar.banners} </a></li>
+	            </ul>
+          </li>
+          <li class="nav-header">
+	            <a href="" data-toggle="collapse" data-target="#managerMenu3">
+	              <h5>#{msgs_manager_navbar.reporting} <i class="glyphicon glyphicon-chevron-down"></i></h5>
+	            </a>
+	            <ul class="list-unstyled collapse" id="managerMenu3">
+	              <li><a href="/g2w14/faces/manager/reports/totalSales.xhtml"><i class="fa fa-usd"></i> #{msgs_manager_navbar.totalSales}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportClient.xhtml"><i class="fa fa-list-alt"></i> #{msgs_manager_navbar.salesByClient}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportAuthor.xhtml"><i class="fa fa-list-alt"></i> #{msgs_manager_navbar.salesByAuthor}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportPublisher.xhtml"><i class="fa fa-list-alt"></i> #{msgs_manager_navbar.salesByPublisher}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/topSeller.xhtml"><i class="fa fa-star"></i>  #{msgs_manager_navbar.topSellers}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/topClients.xhtml"><i class="fa fa-star"></i> #{msgs_manager_navbar.topClients}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportZeroSales.xhtml"><i class="fa fa-exclamation"></i> #{msgs_manager_navbar.zeroSales}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportReorder.xhtml"><i class="fa fa-truck"></i> #{msgs_manager_navbar.reorder}</a></li>
+	              <li><a href="/g2w14/faces/manager/reports/reportStock.xhtml"><i class="fa fa-archive"></i> #{msgs_manager_navbar.stock} </a></li>
+	            </ul>
+          </li>
+       </ul>
+       <hr/>
+	</div> <!-- LEFT NAVIGATION BAR SECTION -->
+</ui:composition>
+</html>

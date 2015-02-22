@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+
+			<h:outputStylesheet library="css" name="registration.css"></h:outputStylesheet>
+			<h:outputStylesheet library="css" name="profile.css"></h:outputStylesheet>
+
+			<div class="container main-content">
+				<div class="row header">
+					<!-- header row -->
+					<h2 class="header-title">#{msgs_help.HelpCenter}</h2>
+					<p class="header-info">#{msgs_help.HaveAny}</p>
+					<div class="line-content"></div>
+				</div>
+				<br />
+				<div class="row">
+					<!-- content row -->
+					<div class="col-md-3">
+						<!-- Help Index -->
+						<ul class="nav nav-pills nav-stacked">
+							<li class="active"><a href="#home" data-toggle="tab"><i
+									class="fa fa-home"></i> #{msgs_help.HomePage}</a></li>
+							<li><a href="#account" data-toggle="tab"><i
+									class="fa fa-user"></i> #{msgs_help.Account}</a></li>
+							<li><a href="#searching" data-toggle="tab"><i
+									class="fa fa-search"></i> #{msgs_help.SearchingBooks}</a></li>
+							<li><a href="#book" data-toggle="tab"><i
+									class="fa fa-book"></i> #{msgs_help.BookProfile}</a></li>
+							<li><a href="#order" data-toggle="tab"><i
+									class="fa fa-truck"></i> #{msgs_help.OrderProcess}</a></li>
+							<li><a href="#faq" data-toggle="tab"><i
+									class="fa fa-question"></i> #{msgs_help.FAQ}</a></li>
+						</ul>
+					</div>
+
+					<!-- HELPCENTER CONTENT -->
+
+					<div class="col-md-8 tab-content">
+						<!-- Home page -->
+
+						<div class="tab-pane active" id="home">
+							<h3>#{msgs_help.HomePage}</h3>
+							<br />
+							<h4>#{msgs_help.SearchBar}</h4>
+							<p>#{msgs_help.searchbarTxt}</p>
+							<br />
+							<h4>#{msgs_help.Suggestions}</h4>
+							<p>#{msgs_help.suggestionsTxt}</p>
+							<br />
+							<h4>#{msgs_help.RecentBooks}</h4>
+							<p>#{msgs_help.recentbooksTxt}</p>
+							<br />
+							<h4>#{msgs_help.OnSale}</h4>
+							<p>#{msgs_help.onsaleTxt}</p>
+							<br />
+							<h4>#{msgs_help.Surveys}</h4>
+							<p>#{msgs_help.surveysTxt}</p>
+						</div>
+
+						<!--Account -->
+
+						<div class="tab-pane " id="account">
+							<h3>#{msgs_help.Account}</h3>
+							<br />
+							<h4>#{msgs_help.Register}</h4>
+							<p>#{msgs_help.registerTxt}</p>
+							<br />
+							<h4>#{msgs_help.SignIn}</h4>
+							<p>#{msgs_help.signinTxt}</p>
+							<br />
+							<h4>#{msgs_help.MyProfile}</h4>
+							<p>#{msgs_help.myprofileTxt}</p>
+							<br />
+						</div>
+
+						<!--Searching Books -->
+
+						<div class="tab-pane " id="searching">
+							<h3>#{msgs_help.SearchingBooks}</h3>
+							<br />
+							<h5>#{msgs_help.searchbookTxt1}</h5>
+							<p>#{msgs_help.searchbookTxt2}</p>
+							<br />
+							<p>#{msgs_help.searchbookTxt3}</p>
+							<br />
+						</div>
+
+						<!--Book Profile -->
+
+						<div class="tab-pane " id="book">
+							<h3>#{msgs_help.BookProfile}</h3>
+							<br />
+							<h4>#{msgs_help.BuyBook}</h4>
+							<p>#{msgs_help.buybookTxt}</p>
+							<br />
+							<h4>#{msgs_help.Suggestions}</h4>
+							<p>#{msgs_help.suggestionsprofileTxt}</p>
+							<br />
+							<h4>#{msgs_help.Review}</h4>
+							<p>#{msgs_help.reviewTxt}</p>
+							<br />
+						</div>
+
+						<!--Order Process -->
+
+						<div class="tab-pane " id="order">
+							<h3>#{msgs_help.OrderProcess}</h3>
+							<br />
+							<h4>#{msgs_help.ShoppingCart}</h4>
+							<p>#{msgs_help.shoppingcartTxt}</p>
+							<br />
+							<h4>#{msgs_help.ProceedCheckout}</h4>
+							<h5>1. #{msgs_help.Shipping}</h5>
+							<p>#{msgs_help.shippingTxt}</p>
+							<h5>2. #{msgs_help.CheckOut}</h5>
+							<p>#{msgs_help.checkoutTxt}</p>
+							<h5>3. #{msgs_help.PlaceOrder}</h5>
+							<p>#{msgs_help.placeorderTxt}</p>
+						</div>
+
+						<!--FAQ -->
+
+						<div class="tab-pane" id="faq">
+							<h3>#{msgs_help.FAQ}</h3>
+							<h5>#{msgs_help.ContactUs}</h5>
+							<br />
+							<p>
+								<a href="#order" data-toggle="tab">#{msgs_help.question1}</a>
+							</p>
+							<p>
+								<a href="#order" data-toggle="tab">#{msgs_help.question2}</a>
+							</p>
+							<p>
+								<a href="#account" data-toggle="tab">#{msgs_help.question3}</a>
+							</p>
+							<p>
+								<a href="#account" data-toggle="tab">#{msgs_help.question4}</a>
+							</p>
+							<p>
+								<a href="#book" data-toggle="tab">#{msgs_help.question5}</a>
+							</p>
+							<p>
+								<a href="#searching" data-toggle="tab">#{msgs_help.question6}</a>
+							</p>
+							<p>
+								<a href="#account" data-toggle="tab">#{msgs_help.question7}</a>
+							</p>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+              version="2.0">
+	
+	<application>
+		<locale-config>
+			<default-locale>en_CA</default-locale>
+			<supported-locale>fr_CA</supported-locale>
+		</locale-config>
+		
+		<message-bundle>com.bookoo.bundles.messages_errors</message-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_home</base-name>
+			<var>msgs_home</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_client</base-name>
+			<var>msgs_client</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_register_page</base-name>
+			<var>msgs_register</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_book</base-name>
+			<var>msgs_book</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_custom_validation</base-name>
+			<var>msgs_validation</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_header</base-name>
+			<var>msgs_header</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_home</base-name>
+			<var>msgs_home</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_manager_navbar</base-name>
+			<var>msgs_manager_navbar</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_management</base-name>
+			<var>msgs_management</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_search_page</base-name>
+			<var>msgs_search</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_sign_in</base-name>
+			<var>msgs_sign</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_top</base-name>
+			<var>msgs_top</var>
+		</resource-bundle>
+
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_helpcenter</base-name>
+			<var>msgs_help</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_add_book</base-name>
+			<var>msgs_abook</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_review</base-name>
+			<var>msgs_review</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_cart</base-name>
+			<var>msgs_cart</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_survey</base-name>
+			<var>msgs_survey</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_banner</base-name>
+			<var>msgs_banner</var>
+		</resource-bundle>
+		
+		<resource-bundle>
+			<base-name>com.bookoo.bundles.messages_newsfeeds</base-name>
+			<var>msgs_nf</var>
+		</resource-bundle>
+
+	</application>
+	
+	<navigation-rule>
+	<from-view-id>/*</from-view-id>
+		<navigation-case>
+			<from-action>#{userSession.logout}</from-action>
+			<from-outcome>logout</from-outcome>
+			<to-view-id>/home.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+		
+	<navigation-rule>
+		<navigation-case>
+			<from-action>#{currentBook.bookId}</from-action>
+			<from-outcome>invalid page</from-outcome>
+			<to-view-id>/home.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+       	<from-view-id>/register.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{clientAction.checkRegistration}</from-action>
+      		<from-outcome>Registration succeeded</from-outcome>
+      		<to-view-id>/registration-success.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+        <navigation-rule>
+       	<from-view-id>/manager/clients.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{clientAction.checkRegistration}</from-action>
+      		<from-outcome>Registration succeeded</from-outcome>
+      		<to-view-id>/manager/clients.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+    
+        
+    <navigation-rule>
+       	<from-view-id>/registration-success.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{userSession.checkLogin}</from-action>
+      		<from-outcome>Login successful</from-outcome>
+      		<to-view-id>/home.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+       	<from-view-id>/profile/invoice.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{shoppingCart.resetCart}</from-action>
+      		<from-outcome>Shopping cart reset</from-outcome>
+      		<to-view-id>/home.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+        <navigation-rule>
+       	<from-view-id>/manager/orders.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{manageOrder.approuved(invoice)}</from-action>
+      		<from-outcome>Update succed</from-outcome>
+      		<to-view-id>/manager/orders.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+           <navigation-rule>
+       	<from-view-id>/manager/surveys.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{surveyAction.insertSurvey(surveyBean) }</from-action>
+      		<from-outcome>1</from-outcome>
+      		<to-view-id>/manager/surveys.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+      <navigation-rule>
+       	<from-view-id>/manager/inventory.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{bookAction.checkEditAvailability(books)}</from-action>
+      		<from-outcome>Success</from-outcome>
+      		<to-view-id>/manager/inventory.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+    
+    <navigation-rule>
+       	<from-view-id>/profile/payment.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{invoiceAction.forwardPurchase}</from-action>
+      		<from-outcome>Purchase succeeded</from-outcome>
+      		<to-view-id>/profile/invoice.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+    
+        <navigation-rule>
+       	<from-view-id>/manager/newsfeeds.xhtml</from-view-id>
+   		<navigation-case>
+      		<from-action>#{rssAction.checkRssEdit(newsFeed)}</from-action>
+      		<from-outcome>null</from-outcome>
+      		<to-view-id>/manager/newsfeeds.xhtml</to-view-id>
+      		<redirect />
+   		</navigation-case>
+    </navigation-rule>
+   	
+    
+    <!-- HTML5 support provided by omnifaces -->
+    <factory>
+    	<render-kit-factory>org.omnifaces.renderkit.Html5RenderKitFactory</render-kit-factory>
+	</factory>
+	
+</faces-config>

@@ -1,0 +1,318 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bookoo</groupId>
+  <artifactId>g2w14</artifactId>
+  <version>1.0.0-FINAL</version>
+  <packaging>war</packaging>
+  <name>Bookoo Bookstore</name>
+  <description>Online Web Bookstore</description>
+
+<repositories>
+	 <repository>  
+	  <id>prime-repo</id>  
+	  <name>PrimeFaces Maven Repository</name>  
+	  <url>http://repository.primefaces.org</url>  
+	  <layout>default</layout>  
+	</repository>  
+ </repositories>
+  
+   <!-- Following the section above use everything below this comment to replace
+        everything from the same position in your pom.xml file. -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.richfaces.bom.version>4.3.4.Final</org.richfaces.bom.version>
+        <org.jboss.arquillian>1.1.2.Final</org.jboss.arquillian>
+        <tomee.version>1.6.0</tomee.version>
+        <tomee.classifier>webprofile</tomee.classifier>
+        <version.shrinkwrap.resolvers>2.1.0-alpha-1</version.shrinkwrap.resolvers>
+    </properties>
+   
+	
+    <!-- Profiles allow me to define parts of the pom.xml for different builds.
+        In Eclipse you can choose the profile name in the Run As -> Maven build...
+        command -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>${version.shrinkwrap.resolvers}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${org.jboss.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.richfaces</groupId>
+                <artifactId>richfaces-bom</artifactId>
+                <version>${org.richfaces.bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <!-- Name of this profile -->
+            <id>arquillian-tomee-remote</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>arquillian-tomee-remote</artifactId>
+                    <version>${tomee.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>apache-tomee</artifactId>
+                    <version>${tomee.version}</version>
+                    <classifier>${tomee.classifier}</classifier>
+                    <type>zip</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-tomee-remote</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+
+        <profile>
+            <id>arquillian-tomee-embedded</id>
+             <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openejb</groupId>
+                    <artifactId>arquillian-tomee-embedded</artifactId>
+                    <version>${tomee.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <!-- if you need some specific configuration for this server
+                         such as arquillian.xml you can put it to the additional
+                         resource folder like the following:
+                    <testResource>
+                        <directory>src/test/resources-tomee-embedded</directory>
+                    </testResource>
+                    -->
+                </testResources>
+            </build>
+        </profile>
+
+        <!-- This is the profile without the Arquillian test libraries. -->
+        <!-- The war is very small -->
+        <profile>
+            <id>deploy_build</id>
+            <!-- These dependencies define the bill of materials -->
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.richfaces</groupId>
+                        <artifactId>richfaces-bom</artifactId>
+                        <version>${org.richfaces.bom.version}</version>
+                        <scope>import</scope>
+                        <type>pom</type>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+        </profile>
+    </profiles>
+
+    <!-- Everything that follows is used for either profile -->
+    <dependencies>
+    
+    
+
+        <!-- Apache OpenEJB -->
+        <!-- This is the dependency that defines the OpenEJB library in TomEE except
+            for Faces. The jars are in TomEE's lib folder so the scope is provided. -->
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0-5</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Required for logging -->
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-core</artifactId>
+            <version>4.6.0</version>
+            <scope>provided</scope>
+        </dependency>
+       
+       
+        <!-- OmniFaces is a utility library for JSF 2 --> 
+        <!-- It's utilities ease everyday tasks with the standard JSF API. -->
+        <dependency>
+    		<groupId>org.omnifaces</groupId>
+    		<artifactId>omnifaces</artifactId>
+    		<version>1.7</version> <!-- Or 1.8-SNAPSHOT -->
+		</dependency>
+		
+		<!-- PrimeFaces is a utility library for JSF 2 --> 
+        <!-- PrimeFaces is a lightweight library with the standard JSF API. Used mainly for UI -->
+		<dependency>  
+		    <groupId>org.primefaces</groupId>  
+		    <artifactId>primefaces</artifactId>  
+	    	<version>3.5</version>  
+		</dependency>
+
+		<!-- Library used to salt passwords -->    
+        <dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.1</version>
+		</dependency>
+		
+		<!-- Library used to validate URL -->   
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+            
+        
+        <!-- Apache MyFaces -->
+        <!-- This is the dependency for the Apache Faces library in TomEE. -->
+        <!-- The jars are in TomEE's lib folder so the scope is provided -->
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl-ee6</artifactId>
+            <version>2.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- These are the two dependencies for RichFaces. -->
+        <!-- I add the jars directly to TomEE's lib so that they are not -->
+        <!-- required to be added in the war file so the scope is provided. -->
+        <!-- The RichFaces bom defines the version number -->
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-ui</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.core</groupId>
+            <artifactId>richfaces-core-impl</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- These three dependencies are libraries required by RichFaces. -->
+        <!-- I add the jars directly to TomEE's lib so that they are not -->
+        <!-- required to be added in the war file so the scope is provided. -->
+        <!-- The RichFaces bom defines the version number for this library. -->
+        <dependency>
+            <groupId>net.sourceforge.cssparser</groupId>
+            <artifactId>cssparser</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- The RichFaces bom defines the version number for this library. -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- The RichFaces bom does not define the version number for this library. -->
+        <dependency>
+            <groupId>org.w3c.css</groupId>
+            <artifactId>sac</artifactId>
+            <scope>provided</scope>
+            <version>1.3</version>
+        </dependency>
+
+        <!-- MySQL dependency -->
+        <!-- The jars are in TomEE's lib folder so the scope is provided -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.28</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Testing dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- used to compile the sources of your project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <!-- minimum Java version -->
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <!-- used during the test phase of the build lifecycle to execute the
+                unit tests of an application -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+            </plugin>
+
+            <!-- responsible for collecting all artifact dependencies, classes and
+                resources of the web application and packaging them into a web application
+                archive -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <warName>g2w14</warName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+   

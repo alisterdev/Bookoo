@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h2 class="header-title">Reorder Report</h2>
+						<p class="header-info">The following books needs to be reordered</p>
+						<div class="line-content"></div>
+												
+						<h:dataTable value="#{reportsAction.lowInventoryReport}" var="low" styleClass="table table-hover table-striped" >
+				            <h:column> 
+								<f:facet name="header">ISBN 10</f:facet>
+				               	#{low.isbn10}
+				            </h:column>
+				            <h:column>
+								<f:facet name="header">ISBN 13</f:facet>
+				               	#{low.isbn13}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_top.title}</f:facet>
+				               	<h:outputLink value="#{request.contextPath}/faces/book.xhtml?bookId=#{low.id}" target="_blank">#{low.trimmedTitle}</h:outputLink>
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Author</f:facet>
+				               	#{low.author}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Publisher</f:facet>
+				               	#{low.publisher}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Copies Remaining</f:facet>
+				               	#{low.copies}
+				            </h:column>
+				       	</h:dataTable>
+				       	
+				      </div>
+			     </div>
+		     </div>
+			</h:body>
+		</ui:define>
+	</ui:composition>
+</html>

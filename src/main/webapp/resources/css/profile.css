@@ -1,0 +1,89 @@
+.line-content {
+  border-top: solid 1px #ffda39;
+}
+
+.header .header-title {
+  color: #666666;
+  font-size: 30px;
+  font-weight: 300;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family:'Raleway', sans-serif;
+}
+.header .header-info {
+  color: #888888;
+  font-size: 14px;
+  font-weight: 300;
+  padding-left: 2px;
+}
+
+.main-content {
+  padding: 15px 15px 55px 15px;
+}
+
+.help-content {
+  padding: 15px 15px 55px 15px;
+  border-top: solid 1px #f0ad4e;
+}
+
+legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 20px;
+  line-height: inherit;
+  border: 0;
+}
+
+.buttons-container
+{
+	margin: 0 auto;
+	padding: 10px;
+	width: 125px;	
+}
+
+.profile-nav {
+	margin-top: 30px;
+}
+
+#updateProfileForm .tab-content {
+	border-left: 1px solid #e5e5e5;
+}
+
+.nav-pills > li.active > a, 
+.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a:focus {
+	background-color: #ffda39;
+	color: #666;
+}
+
+.sale-details {
+	margin-left: -400px;	
+}
+
+.sale-details h5 {
+	margin-bottom: 2px;
+	text-align: left;
+}
+
+.sale-details p {
+	margin: 0;
+	text-align: left;
+}
+
+.sale-details table tr {
+	padding-bottom: 10px;
+	/* border-bottom: 1px solid #ccc; */
+}
+
+.sale-details table tr td {
+	text-align:center;
+}
+
+.order-sale-details {
+	margin-left: -600px;	
+}
+
+.order-sale-details table tr td {
+	padding:5px;
+}

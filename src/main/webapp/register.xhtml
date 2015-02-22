@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" >
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+
+			<h:outputStylesheet library="css" name="registration.css"></h:outputStylesheet>
+
+			<div class="container main-content">
+				<h1 class="register-title">
+					<h:outputText value="#{msgs_register.Title}" />
+				</h1>
+				<br />
+				<div class="row">
+					<!-- start of row 2 registration form -->
+					<h:form id="registrationForm" class="form-horizontal" role="form">
+						<h:panelGroup>
+
+							<div class="row">
+								<!-- inner row for user/pass info -->
+								<div class="col-md-6">
+								<!-- <div class="form-group"><h:outputText value="">Fields marked <span class="required-field">* </span> are required</h:outputText></div> -->
+									<legend>
+										<h:outputText value="#{msgs_register.AccountInformation}" />
+									</legend>
+									<!-- USERNAME -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label"
+											for="username">
+											<span class="required-field">* </span> #{msgs_register.Username}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputText id="username" name="username"
+												class="form-control" value="#{clientBean.username}"
+												validator="#{clientBean.validateUsername}">
+												<f:ajax event="blur" render="usernameError"/>
+											</h:inputText>
+											<h:message id="usernameError" for="username" class="inputError"/>
+										</div>
+									</div>
+									 
+									<!-- PASSWORD -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="password" >
+											<span style="color:red">* </span>#{msgs_register.Password}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputSecret id="password" name="password" 
+												class="form-control" value="#{clientBean.password}"
+												validator="#{clientBean.validatePassword}">
+												<f:ajax event="blur" render="passwordError"/>
+											</h:inputSecret> 
+											<h:message id="passwordError" for="password" class="inputError"/>
+										</div>
+									</div>
+									<!-- CONFIRM PASSWORD -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="password" >
+											<span class="required-field">* </span>#{msgs_register.ConfirmPassword}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputSecret id="confirmpassword" name="confirmpassword"
+												class="form-control" validator="#{clientBean.validatePasswordMatch}">
+												<f:ajax execute="password confirmpassword" event="blur" resetValues="true" render="passwordsDontMatchError"/>
+											</h:inputSecret>
+											<h:message id="passwordsDontMatchError" for="confirmpassword" class="inputError"/>
+										</div>
+									</div>
+									
+								</div>
+								<!-- End of left col (user/pass) -->
+
+								<div class="col-md-6">
+									<div class="info-box">
+										<h5>
+											<h:outputText value="#{msgs_register.WhyRegister}" />
+										</h5>
+										<h:outputText value="#{msgs_register.CreatingAccount}" />
+										<br/>
+										<h:outputText value="#{msgs_register.UseAccount}" />
+										<h5>
+											<h:outputText value="#{msgs_register.AlreadyAccount}" />
+										</h5>
+										<a tabindex="-1" href="#" data-toggle="modal" data-target="#signInModal"
+											class="btn btn-bookoo btn-add">#{msgs_register.LoginNow}</a>
+									</div>
+								</div>
+							</div>
+							<!-- end of inner row for user/pass info -->
+
+							<br />
+
+							<div class="row registration-user-info">
+								<!-- start of inner row for all other user info -->
+								<div class="col-md-6">
+									<legend>
+										<h:outputText value="#{msgs_register.PersonalInformation}" />
+									</legend>
+
+									<!-- TITLE -->
+									<div class="form-group">
+										<h:message class="help-block" for="title" />
+										<h:outputLabel class="col-sm-4 control-label" for="title"
+											value="Title" />
+										<div class="col-sm-2">
+											<h:selectOneMenu id="title" name="title" required="true"
+												class="form-control input-sm" value="#{clientBean.title}"> 
+												<f:selectItem itemLabel="Mr." itemValue="Mr." />
+												<f:selectItem itemLabel="#{msgs_register.Ms}"
+													itemValue="Ms." />
+												<f:selectItem itemLabel="#{msgs_register.Mrs}"
+													itemValue="Mrs." />
+											</h:selectOneMenu>
+										</div>
+									</div>
+
+									<!-- FIRST NAME -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="firstname" >
+											<span class="required-field">* </span>#{msgs_register.FirstName}
+										</h:outputLabel>
+											
+										<div class="col-sm-6">
+											<h:inputText id="firstname" name="firstname"
+												class="form-control" value="#{clientBean.firstName}"
+												required="true" label="first name" 
+												requiredMessage="#{msgs_register.errorFirstName}"
+												validator="#{clientBean.validateName}">
+												<f:ajax event="blur" render="firstNameError"/>
+											</h:inputText>
+											<h:message id="firstNameError" for="firstname" class="inputError"/> 
+										</div>
+									</div>
+
+									<!-- LAST NAME -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="lastname" >
+											<span class="required-field">* </span>#{msgs_register.LastName}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputText id="lastname" name="lastname"
+												class="form-control" value="#{clientBean.lastName}"
+												required="true" label="last name" 
+												requiredMessage="#{msgs_register.errorLastName}"
+												validator="#{clientBean.validateName}" >
+												<f:ajax event="blur" render="lastNameError"/>
+											</h:inputText> 
+											<h:message id="lastNameError" for="lastname" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- COMPANY -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="company"
+											value="#{msgs_register.Company}" />
+										<div class="col-sm-6">
+											<h:inputText id="company" name="company" class="form-control"
+												value="#{clientBean.companyName}" label="company name" 
+												validator="#{clientBean.validateCompanyName}">
+												<f:ajax event="blur" render="companyNameError"/>
+											</h:inputText> 
+											<h:message id="companyNameError" for="company" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- PHONE NUMBER -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="phonenumber">
+											<span class="required-field">* </span>#{msgs_register.PhoneNumber}	
+										</h:outputLabel>
+										<div class="col-sm-4">
+											<h:inputText id="phonenumber"
+												value="#{clientBean.phoneNumber}" class="form-control"
+												required="true" label="phone number"
+												validator="#{clientBean.validatePhoneNumber}" 
+												requiredMessage="#{msgs_register.errorPhoneNumber}" >
+												<f:ajax event="blur" render="phoneNumberError"/>
+											</h:inputText>
+											<h:message style="width:120%" id="phoneNumberError" for="phonenumber" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- CELL NUMBER -->
+									<div class="form-group">
+										<h:message class="help-block" for="cellnumber"></h:message>
+										<h:outputLabel class="col-sm-4 control-label" for="cellnumber"
+											value="#{msgs_register.CellNumber}" />
+										<div class="col-sm-4">
+											<h:inputText id="cellnumber" value="#{clientBean.cellNumber}"
+												class="form-control"
+												validator="#{clientBean.validatePhoneNumber}">
+												<f:ajax event="blur" render="cellNumberError"/>
+											</h:inputText>
+											<h:message style="width:120%" id="cellNumberError" for="phonenumber" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- EMAIL -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="email">
+											<span class="required-field">* </span>#{msgs_register.Email}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputText id="email" name="email" class="form-control"
+												value="#{clientBean.email}" required="true" 
+												validator="#{clientBean.validateEmail}" label="email" requiredMessage="Please enter a valid email!" >
+												<f:ajax event="blur" render="emailError" />
+												<!-- <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" /> -->
+											</h:inputText>
+											<h:message id="emailError" for="email" class="inputError"/> 
+										</div>
+									</div>
+
+								</div>
+								<!-- End of left col - personal info -->
+
+
+								<div class="col-md-6">
+									<legend>
+										<h:outputText value="#{msgs_register.BillingInformation}" />
+									</legend>
+
+									<!-- hack to skip align the form -->
+									<div class="form-group form-hack" style="height: 34px;"></div>
+									<!-- enf of hack -->
+
+									<!-- ADDRESS 1 -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="address1" >
+											<span class="required-field">* </span>#{msgs_register.Address1}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputText id="address1" name="address1"
+												class="form-control" value="#{clientBean.address1}"
+												required="true" label="address 1" 
+												validator="#{clientBean.validateAddress}">
+												<f:ajax event="blur" render="address1Error"/>
+											</h:inputText>
+											<h:message id="address1Error" for="address1" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- ADDRESS 2 -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="address2"
+											value="#{msgs_register.Address2}" />
+										<div class="col-sm-6">
+											<h:inputText id="address2" name="address2"
+												class="form-control" value="#{clientBean.address2}" label="address 2" 
+												validator="#{clientBean.validateAddress}">
+												<f:ajax event="blur" render="address2Error"/>
+											</h:inputText>
+											<h:message id="address2Error" for="address2" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- CITY -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="city" >
+											<span class="required-field">* </span>#{msgs_register.City}
+										</h:outputLabel>
+										<div class="col-sm-6">
+											<h:inputText id="city" name="city" class="form-control"
+												value="#{clientBean.city}" required="true" label="city" 
+												validator="#{clientBean.validateCity}">
+												<f:ajax event="blur" render="cityError"/>
+											</h:inputText>
+											<h:message id="cityError" for="city" class="inputError"/>
+										</div>
+									</div>
+
+									<!-- PROVINCE -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="province" >
+											<span class="required-field">* </span>#{msgs_register.Province}
+										</h:outputLabel>
+										<div class="col-sm-4">
+											<h:selectOneMenu id="province" name="province"
+												class="form-control input-sm" value="#{clientBean.province}"
+												required="true" validatorMessage="">
+												<f:selectItem itemLabel="Alberta" itemValue="AB" />
+												<f:selectItem itemLabel="#{msgs_register.BC}" itemValue="BC" />
+												<f:selectItem itemLabel="Manitoba" itemValue="MB" />
+												<f:selectItem itemLabel="#{msgs_register.NB}" itemValue="NB" />
+												<f:selectItem itemLabel="#{msgs_register.NL}" itemValue="NL" />
+												<f:selectItem itemLabel="#{msgs_register.NS}" itemValue="NS" />
+												<f:selectItem itemLabel="#{msgs_register.NT}" itemValue="NT" />
+												<f:selectItem itemLabel="Nunavut" itemValue="NU" />
+												<f:selectItem itemLabel="Ontario" itemValue="ON" />
+												<f:selectItem itemLabel="#{msgs_register.PE}" itemValue="PE" />
+												<f:selectItem itemLabel="#{msgs_register.QC}" itemValue="QC" />
+												<f:selectItem itemLabel="Saskatchewan" itemValue="SK" />
+												<f:selectItem itemLabel="Yukon" itemValue="YT" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+
+									<!-- COUNTRY -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4 control-label" for="country" >
+											<span class="required-field">* </span>#{msgs_register.Country}
+										</h:outputLabel>
+										<div class="col-sm-4">
+											<h:selectOneMenu id="country" name="country"
+												class="form-control" value="#{clientBean.country}"
+												required="true" requiredMessage="#{msgs_register.errorCountry}">
+												<f:selectItem itemLabel="Canada" itemValue="Canada" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+
+									<!-- POSTAL CODE -->
+									<div class="form-group">
+										<h:outputLabel class="col-sm-4  control-label" for="postalcode">
+											<span class="required-field">* </span>#{msgs_register.PostalCode}
+										</h:outputLabel>
+										<div class="col-sm-3">
+											<h:inputText id="postalcode" name="postalcode"
+												class="form-control postalcode" value="#{clientBean.postalCode}" 
+												required="true" label="postal code" 
+												requiredMessage="#{msgs_register.errorPostalCode}"
+												validator="#{clientBean.validatePostalCode}">
+												<f:ajax event="blur" render="postalCodeError" />
+											</h:inputText>
+											<h:message style="width:200%" id="postalCodeError" for="postalcode" class="inputError"/>
+										</div>
+									</div>
+
+								</div>
+								<!-- end of right col - billing info -->
+
+
+							</div>
+							<!-- end of row with user info -->
+
+							<div class="row">
+								<div class="buttons-container btn-double">
+									<h:commandButton value="#{msgs_register.Submit}"
+										class="btn btn-bookoo"
+										action="#{clientAction.checkRegistration}" />
+										
+									<h:commandButton value="#{msgs_register.Clear}"
+										class="btn btn-bookoo" />
+								</div>
+							</div>
+
+						</h:panelGroup>
+					</h:form>
+				</div>
+				<!-- end of row 2 - registration form -->
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+
+</html>

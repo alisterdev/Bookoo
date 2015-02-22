@@ -1,0 +1,30 @@
+.search-result {
+	min-height: 250px;
+	padding: 25px;
+	/* border: 1px solid #ccc; */
+}
+
+.book-thumbnail {
+	float: left;
+	width: 150px;
+	margin-right: 50px;
+}
+.table_choice_option_result ul {
+	margin:10px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.table_choice_option_result li {
+	list-style: none;
+}
+
+.table_choice_option_result ul li a, a {
+	color: #666;
+}
+
+.table_choice_option_result ul li a:hover, a:hover {
+	color: #ecbf00;
+}
+
+

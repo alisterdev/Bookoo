@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h2> #{msgs_top.TitleZeroSales}</h2>
+						<p class="header-info">#{msgs_top.SubtitleZeroSales}</p>
+						<div class="line-content"></div>
+						
+						<!-- DATE SECTION -->
+						<h:form>
+							<label for="CalendarStart">#{msgs_top.DateIn}</label>
+							<br/>
+								<rich:calendar id="CalendarStart"
+									value="#{report.calendarStart}"
+									timeZone="#{report.timeZone}"
+									datePattern="yyyy-MM-dd">
+	          								<a4j:ajax event="change" render="table1, table2"/>
+
+
+								<!-- Customization with usage of facets and accessible elements -->
+
+								<f:facet name="header">
+									<h:panelGrid columns="2" width="100%"
+										columnClasses="width100, fake">
+										<h:outputText value="{selectedDateControl}" />
+										<h:outputText value="{todayControl}"
+											style="font-weight:bold; text-align:left" />
+									</h:panelGrid>
+								</f:facet>
+								<f:facet name="weekDay">
+									<h:panelGroup style="width:60px; overflow:hidden;"
+										layout="block">
+										<h:outputText value="{weekDayLabelShort}" />
+									</h:panelGroup>
+								</f:facet>
+								<f:facet name="weekNumber">
+									<h:panelGroup>
+										<h:outputText value="{weekNumber}" style="color:red" />
+									</h:panelGroup>
+								</f:facet>
+								<f:facet name="footer">
+									<h:panelGrid columns="3" width="100%"
+										columnClasses="fake, width100 talign">
+										<h:outputText value="{previousMonthControl}"
+											style="font-weight:bold;" />
+										<h:outputText value="{currentMonthControl}"
+											style="font-weight:bold;" />
+										<h:outputText value="{nextMonthControl}"
+											style="font-weight:bold;" />
+									</h:panelGrid>
+								</f:facet>
+							</rich:calendar>
+							
+							<br/>
+							<label for="CalendarEnd" class="dateOut">#{msgs_top.DateOut}</label>
+							
+							<br/>
+							<rich:calendar id="CalendarEnd"
+								value="#{report.calendarEnd}"
+								timeZone="#{report.timeZone}"
+								datePattern="yyyy-MM-dd">
+	          								<a4j:ajax event="change" render="table1, table2"/>
+								</rich:calendar>
+							<br/>
+						</h:form>
+						
+						<h:dataTable id="table1" value="#{reportsAction.reportUnsoldBooks(report.checkin, report.checkout)}" var="books" styleClass="table table-hover table-striped" size="10">
+							<h:column>
+									<f:facet name="header">#{msgs_management.bookId}</f:facet>
+									#{books.id}
+					            </h:column>
+								<h:column>
+									<f:facet name="header">ISBN-10</f:facet>
+									#{books.isbn10}
+					            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.bookTitle}</f:facet>
+									#{books.title}
+					            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.author}</f:facet>
+									<a href="#">#{books.author}</a>
+								</h:column>
+								
+								<h:column>
+									<f:facet name="header">#{msgs_management.listPrice}</f:facet>
+								#{books.listPrice}
+				            </h:column>
+				            
+								<h:column>
+									<f:facet name="header">#{msgs_management.salePrice}</f:facet>
+								#{books.salePrice}
+				            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.copies}</f:facet>
+								#{books.copies}
+				            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.available}</f:facet>
+								#{books.available}
+				            </h:column> 
+				            
+				       	</h:dataTable>
+				      </div>
+			     </div>
+		     </div>
+			</h:body>
+		</ui:define>
+	</ui:composition>
+</html>

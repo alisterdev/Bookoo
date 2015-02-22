@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+
+						<h3>#{msgs_nf.Title}</h3>
+						<div class="line-content"></div>
+						<div class="row">
+							<div class="col-md-3 col-md-push-10">
+								<button data-toggle="modal" data-target="#addRss"
+									class="btn btn-bookoo btn-add" style="width:160px;">Add News Feed</button>
+							</div>
+						</div>
+
+						<h:dataTable id="newsFeeds-list" value="#{rssAction.allNewsFeeds}"
+							var="newsFeed" styleClass="table table-hover table-striped">
+							<h:column>
+								<f:facet name="header">#{msgs_nf.Id}</f:facet>
+				               	#{newsFeed.id}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_nf.NewsTitle}</f:facet>
+				               #{newsFeed.title}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_nf.Link}</f:facet>
+				               #{newsFeed.link}
+				            </h:column>
+				            <h:column>
+									<f:facet name="header">Availability</f:facet>
+									<h:form>
+									<h:commandButton action="#{rssAction.checkRssAvailability(newsFeed)}"
+										rendered="#{newsFeed.available}"
+										value="Stop Broadcast" class="btn btn-bookoo btn-add" />
+									<h:commandButton action="#{rssAction.checkRssAvailability(newsFeed)}"
+										rendered="#{not newsFeed.available}"
+										value="Broadcast" class="btn btn-bookoo" />
+									</h:form>
+								</h:column>
+							<h:column>
+								<td class="actions"><a href="#" data-toggle="modal"
+									data-target="#rss_#{newsFeed.id}"><i class="fa fa-pencil"></i> Edit</a>
+								</td>
+							</h:column>
+
+							<h:column>
+								<div class="modal fade modalrss" id="rss_#{newsFeed.id}"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+									aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal">
+
+												<div class="modal-header">
+													<legend>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-hidden="true">
+															<i class="fa fa-times bookoo-times"></i>
+														</button>
+														<h:outputText value="Edit News Feed" />
+														<br />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+														<!-- TITLE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="rssTitle" value="Title: " />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="rssTitle" name="rssTitle"
+																	class="form-control" value="#{newsFeed.title}"
+																	validator="#{newsFeed.validateRssTitle}"
+																	required="true">
+																	<f:ajax event="blur" render="rssTitleError" />
+																</h:inputText>
+															</div>
+															<h:message id="rssTitleError" for="rssTitle"
+																class="inputErrorModal" />
+														</div>
+														
+														<!-- LINK -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label" for="rssLink"
+																value="Link: " />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="rssLink" name="rssLink"
+																	class="form-control" value="#{newsFeed.link}"
+																	required="true">
+																	
+																</h:inputText>
+															</div>
+															<h:message id="rssLinkError" for="rssLink"
+																class="inputErrorModal" />
+														</div>
+														
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton value="Update" class="btn btn-bookoo"
+													action="#{rssAction.checkRssEdit(newsFeed)}" />
+												</div>
+
+											</h:form>
+										</div>
+									</div>
+								</div>
+							</h:column>
+						</h:dataTable>
+
+						<div class="modal fade modalrss" id="addRss" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<h:form class="form-horizontal">
+
+										<div class="modal-header">
+											<legend>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">
+													<i class="fa fa-times bookoo-times"></i>
+												</button>
+												<h:outputText value="Add News Feed" />
+												<br />
+											</legend>
+										</div>
+
+										<div class="modal-body">
+											<div class="row">
+												<!-- TITLE -->
+												<div class="form-group">
+													<h:outputLabel class="col-xs-3 control-label"
+														for="rssTitle" value="Title: " />
+													<div class="col-xs-5 input-group-sm">
+														<h:inputText id="rssTitle" name="rssTitle"
+															class="form-control" value="#{rssBean.title}"
+															validator="#{rssBean.validateRssTitle}" required="true">
+															<f:ajax event="blur" render="rssTitleError" />
+														</h:inputText>
+													</div>
+													<h:message id="rssTitleError" for="rssTitle"
+														class="inputErrorModal" />
+												</div>
+
+												<!-- LINK -->
+												<div class="form-group">
+													<h:outputLabel class="col-xs-3 control-label" for="rssLink"
+														value="Link: " />
+													<div class="col-xs-5 input-group-sm">
+														<h:inputText id="rssLink" name="rssLink"
+															class="form-control" value="#{rssBean.link}"
+															required="true">
+															
+														</h:inputText>
+													</div>
+													<h:message id="rssLinkError" for="rssLink"
+														class="inputErrorModal" />
+												</div>
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<h:commandButton value="Add" class="btn btn-bookoo"
+												action="#{rssAction.checkRssInsert}" />
+										</div>
+
+									</h:form>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

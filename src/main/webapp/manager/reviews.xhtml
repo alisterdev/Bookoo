@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+				    <h3> Reviews</h3>
+					<div class="line-content"></div>
+					
+					<h:form>
+					<h:dataTable value="#{reviewAction.allReviews}" var="review" styleClass="table table-hover table-striped" size="10">
+			               	<h:column>
+								<f:facet name="header">#{msgs_client.Id}</f:facet>
+				               	#{review.id}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_book.id}</f:facet>
+				               	<h:outputLink value="#{request.contextPath}/faces/book.xhtml?bookId=#{review.bookId}" target="_blank">#{review.bookId}</h:outputLink> 
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.Username}</f:facet>
+				               	#{review.username}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Date</f:facet>
+				               	#{review.date}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_review.Rating}</f:facet>
+				               	#{review.rating}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_review.Review}</f:facet>
+				               	#{review.review}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_review.status}</f:facet>
+			               		<h:commandButton action="#{addReview.approved(review)}" rendered="#{review.approvalStatus}" value="#{msgs_review.disapprove}" class="btn btn-bookoo"/>
+			               		<h:commandButton action="#{addReview.approved(review)}" rendered="#{not review.approvalStatus}" value="#{msgs_review.approve}" class="btn btn-bookoo"/>
+				            </h:column>
+		            </h:dataTable>			            
+		            </h:form>
+			        </div>
+		        </div>
+	        </div>
+        </h:body>
+</ui:define>
+		</ui:composition>
+</html>

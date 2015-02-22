@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+
+			<h:outputStylesheet library="css" name="checkout.css"></h:outputStylesheet>
+			<div class="container main-content">
+
+				<div class="row header">
+					<!-- header row -->
+					<h2 class="header-title">Shopping Cart</h2>
+					<p class="header-info">Make changes to your cart items</p>
+					<div class="line-content"></div>
+				</div>
+
+				<!-- CHECKOUT -->
+				<div class="row">
+					<div class="center-div">
+						<h:panelGroup id="cartItems">
+							<h:panelGroup layout="block"
+								rendered="#{not shoppingCart.emptyCart}">
+								<h:form>
+									<div class="row">
+										<div class="hidden-xs col-sm-6 col-md-6">
+											<h3>item</h3>
+										</div>
+										<div class="hidden-xs col-sm-2 col-md-2">
+											<h3>unit price</h3>
+										</div>
+										<div class="hidden-xs col-sm-2 col-md-2">
+											<h3>quantity</h3>
+										</div>
+										<div class="hidden-xs col-sm-2 col-md-2">
+											<h3>total price</h3>
+										</div>
+										<hr />
+									</div>
+									<ui:repeat id="itemsList" var="item" varStatus="itemStatus"
+										value="#{shoppingCart.booksInCart}">
+										<div class="row cartitem">
+											<div class="col-xs-2 col-sm-2 col-md-2">
+												<h:outputLink id="bookLink" value="book.xhtml">
+													<f:param name="bookId" value="#{item.book.id}" />
+													<h:graphicImage class="bookThumbnail"
+														value="/resources/img/covers/#{item.book.cover}"
+														alt="Book Thumbnail" />
+												</h:outputLink>
+											</div>
+											<div class="col-xs-12 col-sm-4 col-md-4 book-info">
+												<div class="carttitle">
+													<h:outputText value="#{item.book.title}" />
+												</div>
+												<p>
+													<h:outputText value="by #{item.book.author}" />
+												</p>
+												<p>
+													<h:outputText value="#{item.typeSelected}" />
+												</p>
+											</div>
+
+											<div class="col-xs-12 col-sm-2 col-md-2">
+												<h:outputText value="$#{item.book.actualPrice}" />
+											</div>
+											<div class="col-xs-6 col-sm-2 col-md-2">
+												<h:inputText value="#{item.quantity}" size="2" />
+												<h:commandLink class="update-link"
+													action="#{shoppingCart.updateCart(itemStatus.index)}">
+													<i class="fa fa-repeat"></i>
+													<f:ajax event="click" execute="@form"
+														render=":cart-counter cartItems" />
+												</h:commandLink>
+												<h:commandButton style="visibility:hidden"
+													action="#{shoppingCart.updateCart(itemStatus.index)}">
+													<f:ajax event="click" execute="@form"
+														render=":cart-counter cartItems" />
+												</h:commandButton>
+											</div>
+											<div class="col-xs-6 col-sm-2 col-md-2">
+												<h:outputText value="$#{item.total}" />
+											</div>
+										</div>
+										<hr />
+									</ui:repeat>
+									<div class="row">
+										<div class="pull-right">
+											<h3>sub-total: #{shoppingCart.subTotal}</h3>
+											<h:outputLink
+												value="#{request.contextPath}/faces/profile/checkout.xhtml"
+												class="btn btn-bookoo btn-checkout-lg"
+												rendered="#{userSession.isLoggedIn}">
+												Proceed to Checkout
+											</h:outputLink>
+											<h:outputLink rendered="#{not userSession.isLoggedIn}">
+												<a href="#" data-toggle="modal" data-target="#signInModal"
+													class="btn btn-bookoo btn-checkout-lg"> Sign In &amp;
+													Checkout </a>
+											</h:outputLink>
+											<br />
+											<h:outputLink value="#{request.contextPath}/faces/home.xhtml"
+												class="btn btn-bookoo btn-checkout-lg">
+												Continue Shopping
+											</h:outputLink>
+										</div>
+									</div>
+								</h:form>
+							</h:panelGroup>
+							<h:panelGroup layout="block" rendered="#{shoppingCart.emptyCart}">
+								<div class="col-md-8 col-md-offset-2">
+									<h5>Your Shopping Cart is empty. Time to start filling it
+										up!</h5>
+									<p>
+										Make sure to check our
+										<h:outputLink class="btn-link"
+											value="#{request.contextPath}/faces/home.xhtml">great selection of books</h:outputLink>
+									</p>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</div>
+
+
+
+
+
+
+				<!-- CLOSE CHECKOUT -->
+			</div>
+		</h:body>
+	</ui:define>
+
+</ui:composition>
+</html>

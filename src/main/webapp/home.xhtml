@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<h:outputStylesheet library="css" name="owl.carousel.css"></h:outputStylesheet>
+			<h:outputStylesheet library="css" name="owl.transitions.css"></h:outputStylesheet>
+			<h:outputStylesheet library="css" name="home-page.css"></h:outputStylesheet>
+
+			<div class="container main-content">
+
+				<!-- ROW 1 - Display the last genre of books that user clicked - only shows if user is logged in or has a cookie save from previous session -->
+				<h:panelGroup layout="block"
+					rendered="#{cookieHandler.cookieExist}">
+					<div class="row">
+						<div class="col-md-12">
+							<h3 class="subtitle">suggestions</h3>
+							<hr />
+							<div id="carousel-genre" class="owl-carousel">
+								<ui:repeat var="book"
+									value="#{bookAction.searchBookByGenre(cookieHandler.checkGenreCookies())}"
+									size="10">
+									<div class="bookWrapper">
+										<div class="bookThumbnail">
+											<h:outputLink id="bookLink"
+												value="#{request.contextPath}/faces/book.xhtml">
+												<f:param name="bookId" value="#{book.id}" />
+												<h:graphicImage class="bookThumbnail"
+													value="/resources/img/covers/#{book.cover}"
+													alt="Book Thumbnail" />
+											</h:outputLink>
+										</div>
+										<h5>
+											<h:outputText value="#{book.trimmedTitle}" />
+										</h5>
+										#{msgs_book.by}
+										<h:outputText value="#{book.author}" />
+										<br />
+										<h4>
+											<h:outputText value="$#{book.actualPrice}" />
+										</h4>
+									</div>
+								</ui:repeat>
+							</div>
+						</div>
+					</div>
+					<!-- END OF ROW 1 -->
+				</h:panelGroup>
+				<!-- ROW 2 RECENT BOOKS-->
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="subtitle">#{msgs_home.recent}</h3>
+						<hr />
+						<div id="carousel-recent" class="owl-carousel">
+							<ui:repeat var="book" value="#{bookAction.booksByRecentDate}"
+								size="10">
+								<div class="bookWrapper">
+									<h:outputLink id="bookLink"
+										value="#{request.contextPath}/faces/book.xhtml">
+										<f:param name="bookId" value="#{book.id}" />
+										<h:graphicImage class="bookThumbnail"
+											value="/resources/img/covers/#{book.cover}"
+											alt="Book Thumbnail" />
+									</h:outputLink>
+									<h5>
+										<h:outputText value="#{book.trimmedTitle}" />
+									</h5>
+									#{msgs_book.by}
+									<h:outputText value="#{book.author}" />
+									<br />
+									<h4>
+										<h:outputText value="$#{book.actualPrice}" />
+									</h4>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</div>
+				<!-- END OF ROW 2 -->
+
+				<!-- ROW 3 ON SALE BOOKS-->
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="subtitle">#{msgs_home.onSale}</h3>
+						<hr />
+						<div id="carousel-sale" class="owl-carousel">
+							<ui:repeat var="book" value="#{bookAction.booksOnSale}" size="10">
+								<div class="bookWrapper">
+									<h:outputLink id="bookLink" value="book.xhtml">
+										<f:param name="bookId" value="#{book.id}" />
+										<h:graphicImage class="bookThumbnail"
+											value="/resources/img/covers/#{book.cover}"
+											alt="Book Thumbnail" />
+									</h:outputLink>
+									<h5>
+										<h:outputText value="#{book.trimmedTitle}" />
+									</h5>
+									#{msgs_book.by}
+									<h:outputText value="#{book.author}" />
+									<br />
+									<h4>
+										<h:outputText value="$#{book.actualPrice}" />
+									</h4>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</div>
+				<!-- END OF ROW 3 -->
+
+				<!-- ROW 4 RSS -->
+				<div class="row">
+					<h3 class="subtitle">#{msgs_home.news}</h3>
+					<hr />
+					<div class="col-md-8 col-md-offset-2">
+						<div id="carousel-rss" class="owl-carousel">
+							<ui:repeat var="feed" value="#{rssAction.rssFeeds}">
+								<div class="rssWrapper">
+									<h:panelGroup rendered="#{not empty feed.link}">
+										<h:outputLink id="link1" value="#{feed.link}" target="_blank">
+											<h4 id="rssTitle">
+												<h:outputText value="#{feed.title}" />
+											</h4>
+										</h:outputLink>
+										<h6 id="rssDescription">
+											<h:outputText value="#{feed.description}" />
+										</h6>
+										<h:outputLink id="link2" value="#{feed.link}" target="_blank">
+											<h6 id="read-more">read more</h6>
+										</h:outputLink>
+										<h6 id="rssAuthor">
+											<h:outputText value="#{feed.author}" />
+											<br />
+										</h6>
+									</h:panelGroup>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</div>
+				<!-- END OF ROW 3 -->
+				<hr />
+			</div>
+		</h:body>
+		
+	</ui:define>
+</ui:composition>
+</html>

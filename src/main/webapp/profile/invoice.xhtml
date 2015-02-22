@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container main-content">
+
+				<!-- Shopping Cart / Checkout Navigation -->
+				<div class="row form-group">
+					<ul id="breadcrumb" class="col-md-12 navsetup well">
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-shopping-cart fa-lg"></i><br />Confirm your order</a></li>
+						<li class="disabled col-md-4"><a href="#"><i
+								class="fa fa-share fa-lg"></i><br />#{msgs_cart.checkOut}</a></li>
+						<li class="active col-md-4"><a href="#"><i
+								class="fa fa-file-text-o fa-lg"></i><br />#{msgs_cart.placeOrder}</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- INVOICE -->
+				<div class="row navsection" id="invoice">
+					<div
+						class="col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 well">
+						<!-- RECEIPT HEADER -->
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<address>
+									Bookoo Online Bookstore<br></br> 3040 Rue Sherbrooke Ouest
+									Montréal<br></br> (123) 456-7890
+								</address>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 text-right">
+								<p>
+									<em> <h:outputText value="#{currentDate}">
+											<f:convertDateTime pattern="EEE, dd MMM yyyy HH:mm:ss"
+												type="date" />
+										</h:outputText>
+									</em>
+								</p>
+
+								<p>
+									<strong>Order #: 1234</strong>
+								</p>
+							</div>
+						</div>
+						<!-- CLOSE RECEIPT HEADER -->
+
+						<!-- RECEIPT BODY -->
+						<div class="row">
+							<div class="text-center">
+
+								<h3>bookoo</h3>
+								<hr />
+								<h4>
+									<h:outputText value="Invoice" />
+								</h4>
+							</div>
+
+							<h:dataTable value="#{shoppingCart.booksInCart}" var="item"
+								styleClass="table table-hover table-striped">
+
+								<h:column class="col-md-9">
+									<f:facet name="header">#{msgs_cart.Title}</f:facet>
+									<h:outputText value="#{item.book.title}" />
+								</h:column>
+
+								<h:column class="col-md-1">
+									<f:facet name="header" style="text-align:center;">#{msgs_cart.Quantity}</f:facet>
+									<h:outputText value="#{item.quantity}" />
+
+								</h:column>
+
+								<h:column class="col-md-1">
+									<f:facet name="header" style="text-align:center;">#{msgs_cart.Price}</f:facet>
+									<h:outputText value="#{item.book.listPrice}" />
+								</h:column>
+
+								<h:column class="col-md-1">
+									<f:facet name="header" style="text-align:center;">#{msgs_cart.Total}</f:facet>
+									<h:outputText value="#{item.total}" />
+
+								</h:column>
+							</h:dataTable>
+
+							<table class="table table-hover table-striped">
+								<tbody>
+									<tr>
+										<td class="col-md-3"> </td>
+										<td class="col-md-1" style="text-align: center"> </td>
+
+										<td class="col-md-1 text-right">
+											<p>
+												<strong>Subtotal: </strong>
+											</p>
+											<p>
+												<strong>Tax: </strong>
+											</p>
+										</td>
+
+										<td class="col-md-1 text-center">
+											<p>
+												<h:outputText value="#{shoppingCart.subTotal}">
+													<f:convertNumber maxFractionDigits="2"
+														minFractionDigits="2" />
+												</h:outputText>
+											</p>
+											<p>
+												<h:outputText value="#{shoppingCart.calculatedTaxes}">
+													<f:convertNumber maxFractionDigits="2"
+														minFractionDigits="2" />
+												</h:outputText>
+											</p>
+										</td>
+									</tr>
+
+									<tr>
+										<td> </td>
+										<td> </td>
+										<td class="text-right"><h4>
+												<strong>Total: </strong>
+											</h4></td>
+										<td class="text-center bookoo"><h4>
+												<h:outputText value="#{shoppingCart.grandTotal}">
+													<f:convertNumber maxFractionDigits="2"
+														minFractionDigits="2" />
+												</h:outputText>
+											</h4></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<td><h:form>
+									<h:commandButton value="Done" class="btn btn-bookoo"
+										action="#{shoppingCart.resetCart}" />
+								</h:form></td>
+						</div>
+						<!-- CLOSE RECEIPT BODY -->
+					</div>
+				</div>
+				<!-- CLOSE INVOICE -->
+
+			</div>
+		</h:body>
+	</ui:define>
+
+</ui:composition>
+</html>

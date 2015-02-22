@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h3>#{msgs_banner.Title}</h3>
+						<div class="line-content"></div>
+						<div class="row">
+							<div class="col-md-2 col-md-offset-10">
+								<button data-toggle="modal" data-target="#banner"
+									class="btn btn-bookoo btn-add">Add Banner</button>
+							</div>
+						</div>
+						<br/>
+						<h:dataTable id="banners-list" value="#{bannerAction.allBanners}"
+							var="banner" styleClass="table table-hover table-striped"
+							size="10">
+							<h:column>
+								<f:facet name="header">#{msgs_banner.Id}</f:facet>
+				               	#{banner.id}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_banner.Image}</f:facet>
+				               #{banner.image}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_banner.Description}</f:facet>
+				               #{banner.description}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_banner.Link}</f:facet>
+				               #{banner.link}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_banner.Status}</f:facet>
+								<h:form>
+									<h:commandButton action="#{banner.approuved(banner)}"
+										rendered="#{banner.available}" value="#{msgs_banner.Disable}"
+										class="btn btn-bookoo" />
+									<h:commandButton action="#{banner.approuved(banner)}"
+										rendered="#{not banner.available}"
+										value="#{msgs_banner.Enable}" class="btn btn-bookoo" />
+								</h:form>
+							</h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_banner.edit}</f:facet>
+								<a href="#" data-toggle="modal"
+									data-target="#banners_#{banner.id}"><i class="fa fa-pencil"></i></a>
+							</h:column>
+							<h:column>
+							<!-- BANNER MODAL -->
+								<div class="modal fade" id="banners_#{banner.id}" tabindex="-1"
+									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								
+									<div class="modal-dialog edit-item-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal" >
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">
+														<i class="fa fa-times bookoo-times"></i>
+													</button>
+													<legend>
+														<h:outputText value="Add Banner" />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+															<!-- IMAGE -->
+															<div class="form-group">
+																<h:message class="help-block" for="image" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="image" value="Image" />
+																<div class="col-xs-6">
+																	<h:inputText id="image" name="#{msgs_banner.Image}"
+																		class="form-control" value="#{banner.image}"
+																		required="true" />
+																</div>
+															</div>
+															
+															<!-- DESCRIPTION -->
+															<div class="form-group">
+																<h:message class="help-block" for="description" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="description" value="#{msgs_banner.Description}" />
+																<div class="col-xs-6">
+																	<h:inputText id="description" name="description"
+																		class="form-control" value="#{banner.description}"
+																		required="true" />
+																</div>
+															</div>
+															
+															<!-- LINK -->
+															<div class="form-group">
+																<h:message class="help-block" for="bannerlink" />
+																<h:outputLabel class="col-xs-4 control-label"
+																	for="bannerlink" value="#{msgs_banner.Link}" />
+																<div class="col-xs-6">
+																	<h:inputText id="bannerlink" name="bannerlink"
+																		class="form-control" value="#{banner.link}"
+																		required="true" />
+																</div>
+															</div>
+															
+															<rich:fileUpload
+																addControlLabel="upload"
+																fileUploadListener="#{fileUpload.listener}"
+																acceptedTypes="jpg,jpeg,gif,png"
+																ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');"
+																maxFilesQuantity="1"
+																required="true"/>
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton class="btn btn-bookoo" value="#{msgs_banner.update}" action="#{bannerAction.updateBannerBean(banner.id)}" />
+												</div>
+											</h:form>
+										</div>
+									</div>
+								</div>
+							</h:column>
+						</h:dataTable>
+						
+						<!-- BANNER MODAL 2-->
+						<div class="modal fade" id="banner" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						
+						
+							<div class="modal-dialog edit-item-dialog">
+								<div class="modal-content">
+									<h:form class="form-horizontal" id="form2" >
+									
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-hidden="true">
+												<i class="fa fa-times bookoo-times"></i>
+											</button>
+											<legend>
+												<h:outputText value="Add Banner" />
+											</legend>
+										</div>
+
+										<div class="modal-body">
+											<div class="row">
+													
+													<!-- DESCRIPTION -->
+													<div class="form-group">
+														<h:message class="help-block" for="description" />
+														<h:outputLabel class="col-xs-4 control-label"
+															for="description" value="#{msgs_banner.Description}" />
+														<div class="col-xs-6">
+															<h:inputText id="description" name="description"
+																class="form-control" value="#{bannerBean.description}"
+																validator="#{bannerBean.validateDescription}">
+																<f:ajax event="blur" render="descriptionError"/>
+															</h:inputText>
+															
+															<h:message id="descriptionError" for="description" class="inputError"/>
+						
+														</div>
+													</div>
+													
+													<!-- LINK -->
+													<div class="form-group">
+														<h:message class="help-block" for="bannerlink" />
+														<h:outputLabel class="col-xs-4 control-label"
+															for="bannerlink" value="#{msgs_banner.Link}" />
+														<div class="col-xs-6">
+															<h:inputText id="bannerlink" name="bannerlink"
+																class="form-control" value="#{bannerBean.link}"
+																validator="#{bannerBean.validateLink}">
+																<f:ajax event="blur" render="linkError"/>
+															</h:inputText>
+															
+															<h:message id="linkError" for="bannerlink" class="inputError"/>
+						
+														</div>
+													</div>
+													
+													<rich:fileUpload
+														addControlLabel="upload"
+														fileUploadListener="#{fileUpload.listenerBanner}"
+														acceptedTypes="jpg,jpeg,gif,png"
+														ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');"
+														maxFilesQuantity="1"
+														required="true"/>
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<h:commandButton action="#{bannerAction.insertBa}" class="btn btn-bookoo" value="Add" id="commandForm"/>
+											<h:message id="formError" for="commandForm" class="inputError"/>
+										</div>
+
+									</h:form>
+								</div>
+							</div>
+						</div>
+						<!-- END BANNER 2 -->
+						
+						
+					</div>
+					<!-- TABLE / REPORTS SECTION -->
+
+				</div>
+				<!-- Row -->
+			</div>
+			<!-- Container -->
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

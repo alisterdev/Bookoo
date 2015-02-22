@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" 
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<h:outputStylesheet library="css" name="owl.carousel.css"/>
+			<h:outputStylesheet library="css" name="owl.transitions.css"/>
+			<h:outputStylesheet library="css" name="home-page.css"/>
+			<h:outputStylesheet library="css" name="book-page.css" />
+
+			<!-- allow us to load the book ID -->
+			<h:inputHidden value="#{currentBook.bookId}" />
+			<!-- allow us to write the genre in the cookie -->
+			<h:inputHidden value="#{ cookieHandler.writeGenreCookie(currentBook.book.genre) }" />
+			
+			<div class="container main-content">
+				<div class="row">
+					<div class="col-md-4 col-md-offset-2">
+						<h:graphicImage class="img-responsive bookThumbnail2X" value="resources/img/covers2X/#{currentBook.book.cover}" alt="" />
+					</div>
+					<div class="col-md-4 book-details">
+						<h3><h:outputText value="#{currentBook.book.title}" /></h3>
+						<p>#{msgs_book.by}<h:outputText value=" #{currentBook.book.author}" /></p>
+						<o:form role="form" includeRequestParams="true">
+							<br />#{msgs_book.format}:
+							<h:selectOneMenu value="#{shoppingCart.currentBookType}" required="true">
+								<f:selectItems value="#{currentBook.bookTypeItems}" />
+							</h:selectOneMenu>
+							<br />
+							<br />#{msgs_book.price}:
+							<h:outputText value="$ #{currentBook.book.actualPrice}" />
+							<br />
+							<br /> #{msgs_book.quantity}:
+							<h:selectOneMenu id="quantitySelect" value="#{shoppingCart.currentQuantity}" required="true">
+								<f:selectItems value="#{currentBook.quantityItems}" />
+							</h:selectOneMenu>
+							<br />
+							<!-- Book is either available for purchase or out of stock -->
+							<h:commandButton id="addToCart" class="btn btn-bookoo btn-add"
+								value="#{msgs_home.addCart}" rendered="#{currentBook.book.available}" action="#{shoppingCart.addToCart}">
+								<f:ajax event="click" execute="@form" render=":cart-counter"/>
+							</h:commandButton>
+							<h:commandButton class="btn btn-bookoo btn-add"
+								value="Out of stock" disabled="true" rendered="#{not currentBook.book.available}">
+							</h:commandButton>
+						</o:form>
+						<br/>
+						<div class="alert-message"><div class="alert alert-success">Item was added to cart!</div></div>
+					</div>
+				</div>
+				<!-- End of the row -->
+				<br />
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="panel panel-default">
+							<div class="panel-heading">#{msgs_book.book_information}</div>
+							<table class="table table-striped">
+								<tbody>
+									<tr>
+										<td>ISBN13</td>
+										<td><h:outputText value="#{currentBook.book.isbn13}" /></td>
+									</tr>
+									<tr>
+										<td>ISBN10</td>
+										<td><h:outputText value="#{currentBook.book.isbn10}" /></td>
+									</tr>
+									<tr>
+										<td>#{msgs_book.number_of_pages}</td>
+										<td><h:outputText value="#{currentBook.book.pages}" /></td>
+									</tr>
+									<tr>
+										<td>#{msgs_book.publisher}</td>
+										<td><h:outputText value="#{currentBook.book.publisher}" />
+											Inc</td>
+									</tr>
+									<tr>
+										<td>#{msgs_book.weight}</td>
+										<td><h:outputText value="#{currentBook.book.weight}" /></td>
+									</tr>
+									<tr>
+										<td>#{msgs_book.dimensions}</td>
+										<td><h:outputText value="#{currentBook.book.dimensions}"/></td>
+									</tr>
+									<tr>
+										<td>Genre</td>
+										<td><h:outputText value="#{currentBook.book.genre}" /></td>
+									</tr>
+									<tr>
+										<td>#{msgs_book.bookType}</td>
+										<td><h:outputText value="#{currentBook.book.stringBookType}" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h3 class="subtitle">#{msgs_book.similar}</h3>
+						<div id="carousel-recent" class="owl-carousel">
+							<ui:repeat var="book"
+								value="#{bookAction.searchBookByGenre(currentBook.book.genre)}"
+								size="10">
+								<div class="bookWrapper">
+									<h:outputLink id="bookLink" value="book.xhtml">
+										<f:param name="bookId" value="#{book.id}" />
+										<h:graphicImage class="bookThumbnail"
+											value="resources/img/covers/#{book.cover}" alt="Book Thumbnail" />
+									</h:outputLink>
+										<h5><h:outputText value="#{book.trimmedTitle}" /></h5>
+										#{msgs_book.by} <h:outputText value="#{book.author}"/><br/>
+										<h4><h:outputText value="$#{book.actualPrice}"/></h4>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+				<h3 class="subtitle">#{msgs_book.comments}</h3>
+				<h:panelGroup layout="block" styleClass="col-md-12 comment-msg" rendered="#{not userSession.isLoggedIn}">
+					#{msgs_book.comment_resticted_msg1} <a href="#" data-toggle="modal" data-target="#signInModal">#{msgs_header.signin2}</a> #{msgs_book.comment_resticted_msg2}
+				</h:panelGroup>
+					<div class="col-md-8 col-md-offset-2">
+						<o:form id="review-form" role="form" rendered="#{userSession.isLoggedIn}" includeRequestParams="true">
+							<h:panelGroup layout="block" styleClass="col-md-8 comment-msg2">
+								<h:outputText value="#{msgs_book.review_help}: "/>
+							</h:panelGroup>
+							<br/><br/>
+		       				<h:outputText value="#{msgs_book.star_rating}: "/>
+		       				<p:rating value="#{addReview.rating}" />
+		       				<br/><br/>
+							<h:outputText  value="#{msgs_book.comment}: "/>
+							<h:inputTextarea id="reviewMessage" name="reviewMessage" value="#{addReview.review}" required="true" requiredMessage="Please enter a review!" validator="#{reviewBean.validateReview}" rows="4" cols="60">
+								<f:ajax event="blur" render="reviewError"/>
+							</h:inputTextarea>
+							<p style="color:#bbb;text-align:center;">Your message will need to be approved by moderator before it will be displayed</p> 
+							<h:message id="reviewError" for="reviewMessage" class="inputError"/>
+							<div class="pull-right" style="margin-bottom:25px">
+								<h:commandButton value="#{msgs_book.leaveCom}" class="btn btn-bookoo btn-add btn-checkout-lg" action="#{addReview.comment(currentBook.book.id, userSession.client.username, userSession.client.id)}"/>		
+							</div>
+						</o:form>
+					</div>
+				</div>
+			
+				<div class="row">
+					<div class="col-md-12">
+					<ui:repeat id="reviews" var="review" value="#{addReview.getAllReviews(currentBook.book.id)}">
+						<div class="col-md-8 col-md-offset-2 review-item">
+							<p:rating id="posted-review" value="#{review.rating}" readonly="true" /> #{msgs_book.on} #{review.formattedDate}<br/>
+							<h5>#{msgs_book.by} #{review.username}</h5>
+							#{review.review}
+						<hr/>
+						</div>	
+					</ui:repeat>
+			        </div>
+		        </div>
+			</div>
+			
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

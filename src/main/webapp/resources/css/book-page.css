@@ -1,0 +1,31 @@
+.bookThumbnail2X {
+	display: block;
+	margin: 0 auto;
+	width:315px;
+	height:420px;
+}
+
+.comment-msg { padding-left: 0; margin:20px 0; text-align: center; }
+.comment-msg2 { padding-left: 0;}
+.comment-msg a { color: #ecbf00; }
+.comment-msg a:hover { text-decoration: underline; }
+ 
+ 
+.ui-rating {
+	display: inline-block;
+}
+
+#review-form {
+	margin: 20px;
+}
+
+#review-form textarea {
+	width: 100%;
+	outline: 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;	
+}
+
+.review-item {
+	padding: 10px;
+}

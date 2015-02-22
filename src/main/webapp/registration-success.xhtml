@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+
+			<div class="container main-content">
+
+				<div class="row header">
+					<!-- header row -->
+					<h2 class="header-title">Registration Successful!</h2>
+					<p class="header-info">Start discovering Bookoo!</p>
+					<div class="line-content"></div>
+				</div>
+
+				<!-- CHECKOUT -->
+				<div class="row">
+				<br/><br/>
+						<div class="col-md-6 col-md-offset-4">
+							Your account has successfully been created! <br/>
+							Please sign-in to start discovering our great selection of books.
+							<div class="buttons-container btn-single">
+								<a href="#" data-toggle="modal" data-target="#signInModal"
+								class="btn btn-bookoo btn-add">#{msgs_register.LoginNow}</a>
+							</div>
+						</div>
+				</div>
+				<!-- CLOSE CHECKOUT -->
+			</div>
+		</h:body>
+	</ui:define>
+
+</ui:composition>
+</html>

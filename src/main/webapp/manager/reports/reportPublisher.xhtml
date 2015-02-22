@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" 
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+				
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h2> #{msgs_top.SalesByPublisherTitle}</h2>
+						<div class="line-content"></div>
+						<!-- CLIENT SEARCH -->
+						<div class="search-container">
+							<h5>#{msgs_top.PublisherSearch}</h5>
+							<o:form id="searchForm-publisher" includeRequestParams="true">
+								<h:commandButton class='hide' value="" action="reportPublisherSearch?faces-redirect=true&amp;includeViewParams=true" />
+								<div class="input-group">
+									<span class="input-group-addon">
+									 	<h:commandLink action="reportPublisherSearch?faces-redirect=true&amp;includeViewParams=true">
+											<i class="fa fa-search"></i>
+										</h:commandLink>
+									</span>
+									
+									<h:inputText name="searchParam-client" class="searchbar form-control" value="#{bookSearch.search}" placeholder="Search publisher... ">
+										<f:param name="search-client" value=""/>
+									</h:inputText>
+									
+									<div class="input-group-btn search-type">
+										<button type="button" class="btn btn-default dropdown-toggle search-dropdown" data-toggle="dropdown">#{msgs_header.publisher} <span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="">#{msgs_header.publisher}</a></li>
+											<h:inputHidden id="type" name="type" value="#{bookSearch.type}" />
+										</ul>
+									</div>
+									
+								</div>
+								<h:button value="#{msgs_top.SeeAll}" outcome="totalSales" class="btn btn-bookoo btn-add"/>
+					
+							</o:form>
+						</div>
+				       	
+				      </div>
+			     </div>
+		     </div>
+			</h:body>
+		</ui:define>
+	</ui:composition>
+</html>
+

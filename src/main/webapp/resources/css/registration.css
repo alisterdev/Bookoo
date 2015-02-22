@@ -1,0 +1,54 @@
+/* REGISTRATION FORM STYLES */
+
+legend
+{
+	font-size: 16px;
+	font-family: 'Raleway', sans-serif;
+	text-align: center;
+}
+
+.registration-user-info .form-control
+{
+	height: 34px;
+}
+
+.form-horizontal
+{
+	padding: 10px 20px;
+}
+
+
+.buttons-container {
+	margin: 0 auto;
+	padding: 10px;
+}
+
+.buttons-container .btn-bookoo { margin-left: 10px; }
+
+.btn-single { width: 125px;	}
+.btn-double { width: 250px;	}
+
+
+
+.info-box
+{
+	margin-left: 10px;
+	padding: 10px 30px;
+	/* border-left: 1px solid #e5e5e5; */
+}
+
+.register-title
+{
+	text-align: center;
+	font-size: 25px;
+	font-family: 'Raleway', sans-serif;
+}
+
+
+@media (max-width: 1000px)
+{
+	.form-hack, .info-box { display:none; }	
+}
+
+
+/* END REGISTRATION FORM */

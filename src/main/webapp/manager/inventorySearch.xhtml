@@ -1,0 +1,865 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:o="http://omnifaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="search" value="#{bookAction.search}"></f:viewParam>
+	<f:viewParam name="by" value="#{bookAction.type}"></f:viewParam>
+</f:metadata>
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<h:outputStylesheet library="css" name="manager.css"></h:outputStylesheet>
+
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h3>#{msgs_manager_navbar.inventory}</h3>
+						<div class="line-content"></div>
+						<div class="row">
+							<!-- SEARCH + ADD BOOK ROW -->
+							<div class="col-md-6">
+									<o:form id="bookSearchForm" includeRequestParams="true">
+										<h:commandButton class='hide'
+											action="inventorySearch?faces-redirect=true&amp;includeViewParams=true" />
+
+										<div class="input-group">
+
+											<span class="input-group-addon"> <h:commandLink
+													action="inventorySearch?faces-redirect=true&amp;includeViewParams=true">
+													<i class="fa fa-search"></i>
+												</h:commandLink>
+											</span>
+
+											<h:inputText name="searchParam"
+												class="searchbar form-control" value="#{bookAction.search}"
+												placeholder="Search for a book...">
+												<f:param name="search" value="" />
+											</h:inputText>
+
+											<div class="input-group-btn search-type">
+												<button type="button"
+													class="btn btn-default dropdown-toggle search-dropdown"
+													data-toggle="dropdown">
+													#{msgs_header.title} <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu pull-right">
+													<li><a href="">Title</a></li>
+													<li><a href="">ISBN 10</a></li>
+													<li><a href="">Author</a></li>
+													<li><a href="">Publisher</a></li>
+													<h:inputHidden id="type" name="type"
+														value="#{bookAction.type}" />
+												</ul>
+											</div>
+										</div>
+									</o:form>
+							</div>
+							
+							<div class="col-md-2 col-md-offset-4">
+								<button data-toggle="modal" data-target="#inventory"
+									class="btn btn-bookoo btn-add">Add Book</button>
+							</div>
+						</div>
+						<!-- End of Search + Buttons -->
+						
+						<br/>
+						<h:outputFormat value="We have found {0} result(s):">
+								<f:param value="#{bookAction.booksList.size()}"/>
+						</h:outputFormat>
+
+						<div class="row">
+							<h:dataTable value="#{bookAction.booksList}" rendered="#{not empty bookAction.booksList}" var="books"
+								styleClass="table table-hover table-striped" >
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.cover}</f:facet>
+									<h:graphicImage class="bookThumbnailMini"
+										value="/resources/img/covers/#{books.cover}"
+										alt="Book Thumbnail" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">ISBN-10</f:facet>
+									#{books.isbn10}
+					            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.bookTitle}</f:facet>
+									#{books.trimmedTitle}
+					            </h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.author}</f:facet>
+									<a href="#">#{books.author}</a>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.genre}</f:facet>
+									#{books.genre}
+		           				</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.bookType}</f:facet>
+									<c:set var="key" value="bookType#{books.bookType}" />
+									<h:outputText value="#{msgs_management[key]}" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.listPrice}</f:facet>
+									<h:outputText value="$ #{books.listPrice}">
+										<f:convertNumber minFractionDigits="2"></f:convertNumber>
+									</h:outputText>									
+				            	</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.salePrice}</f:facet>
+									<h:outputText value="$ #{books.salePrice}">
+										<f:convertNumber minFractionDigits="2"></f:convertNumber>
+									</h:outputText>
+				            	</h:column>
+
+								<h:column>
+									<f:facet name="header">#{msgs_management.copies}</f:facet>
+									#{books.copies}
+				            	</h:column>
+				            	
+								<h:column>
+									<f:facet name="header">Availability</f:facet>
+									<h:form>
+									<h:commandButton action="#{bookAction.checkEditAvailability(books)}"
+										rendered="#{books.available}"
+										value="Close Sale" class="btn btn-bookoo" />
+									<h:commandButton action="#{bookAction.checkEditAvailability(books)}"
+										rendered="#{not books.available}"
+										value="Open Sale" class="btn btn-bookoo" />
+									</h:form>
+								</h:column>
+								
+								<h:column>
+									<f:facet name="header">View Details</f:facet>
+									<a href="" data-toggle="collapse"
+										data-target="#BookDetails#{books.id}">
+										<h5>
+											View Details <i class="glyphicon glyphicon-chevron-down"></i>
+										</h5>
+									</a>
+
+									<div class="list-unstyled collapse"
+										id="BookDetails#{books.id}">
+										<table styleClass="table table-hover table-striped">
+											<thead>
+												<tr>
+													<th>ISBN-13</th>
+													<th>Wholesale Price</th>
+													<th>Dimensions</th>
+													<th>Weight</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>#{books.isbn13}</td>
+													<td>#{books.wholesalePrice}</td>
+													<td>#{books.dimensions}</td>
+													<td>#{books.weight}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</h:column>
+								<h:column>		
+								<div class="modal fade modalinventory"
+									id="inventory_#{books.id}" tabindex="-1" role="dialog"
+									aria-labelledby="myModalLabel" aria-hidden="true">
+
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<h:form class="form-horizontal" id="userForm2">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">
+														<i class="fa fa-times bookoo-times"></i>
+													</button>
+													<legend>
+														<h:outputText value="Add a Book" />
+													</legend>
+												</div>
+
+												<div class="modal-body">
+													<div class="row">
+														<div class="col-md-7">
+															<legend>
+																<h:outputText value="Book Information" />
+															</legend>
+															<div class="line-content"></div>
+
+															<!-- ISBN 10  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="isbn10" value="ISBN-10:" />
+																<div class="col-xs-4 input-group-sm">
+																	<h:inputText id="isbn10" name="isbn10"
+																		class="form-control" value="#{books.isbn10}"
+																		validator="#{books.validateISBN10}" required="true">
+
+																		<f:ajax event="blur" render="isbn10Error" />
+																	</h:inputText>
+																</div>
+																<h:message id="isbn10Error" for="isbn10"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- ISBN 13  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="isbn13" value="ISBN-13:" />
+																<div class="col-xs-4 input-group-sm">
+																	<h:inputText id="isbn13" name="isbn13"
+																		class="form-control" value="#{books.isbn13}"
+																		validator="#{books.validateISBN13}" required="true">
+
+																		<f:ajax event="blur" render="isbn13Error" />
+																	</h:inputText>
+																</div>
+																<h:message id="isbn13Error" for="isbn13"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- TITLE  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="title" value="Title:" />
+																<div class="col-xs-5 input-group-sm">
+																	<h:inputText id="title" name="title"
+																		class="form-control" value="#{books.title}"
+																		validator="#{books.validateTitle}" required="true">
+
+																		<f:ajax event="blur" render="titleError" />
+																	</h:inputText>
+																</div>
+																<h:message id="titleError" for="title"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- AUTHOR  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="author" value="Author:" />
+																<div class="col-xs-5 input-group-sm">
+																	<h:inputText id="author" name="author"
+																		class="form-control" value="#{books.author}"
+																		validator="#{books.validateAuthor}" required="true">
+
+																		<f:ajax event="blur" render="authorError" />
+																	</h:inputText>
+																</div>
+																<h:message id="authorError" for="author"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- PUBLISHER  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="publisher" value="Publisher:" />
+																<div class="col-xs-5 input-group-sm">
+																	<h:inputText id="publisher" name="publisher"
+																		class="form-control" value="#{books.publisher}"
+																		validator="#{books.validatePublisher}" required="true">
+
+																		<f:ajax event="blur" render="publisherError" />
+																	</h:inputText>
+																</div>
+																<h:message id="publisherError" for="publisher"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- PAGES  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="pages" value="Pages:" />
+																<div class="col-xs-2 input-group-sm">
+																	<h:inputText id="pages" name="pages"
+																		class="form-control" value="#{bookBean.pages}"
+																		required="true">
+																		<f:validateDoubleRange minimum="10" maximum="10000" />
+																		<f:ajax event="blur" render="pagesError" />
+																	</h:inputText>
+																</div>
+																<h:message id="pagesError" for="pages"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- GENRE -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="genre" value="Genre:" />
+																<div class="col-xs-4 input-group-sm">
+																	<h:selectOneMenu id="genre" name="genre"
+																		class="form-control input-sm" value="#{books.genre}">
+																		<f:selectItem itemLabel="Children"
+																			itemValue="Children" />
+																		<f:selectItem itemLabel="Science-Fiction"
+																			itemValue="Sci Fiction" />
+																		<f:selectItem itemLabel="Thriller"
+																			itemValue="Thriller" />
+																		<f:selectItem itemLabel="Young Adult"
+																			itemValue="Young Adult" />
+																		<f:selectItem itemLabel="Classic" itemValue="Classic" />
+																	</h:selectOneMenu>
+																</div>
+																<h:message id="genreError" for="genre"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- LINK  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-2 control-label" for="link"
+																	value="Link:" />
+																<div class="col-xs-5 input-group-sm">
+																	<h:inputText id="link" name="link" class="form-control"
+																		value="#{books.downloadLink}" required="true">
+
+																	</h:inputText>
+																</div>
+
+															</div>
+
+															<!-- COVER -->
+															<div class="form-group">
+																<h:message class="help-block" for="cover" />
+																<h:outputLabel class="col-xs-2 control-label"
+																	for="cover" value="Cover:" />
+																<div class="col-xs-2 input-group-sm"></div>
+															</div>
+
+														</div>
+
+														<div class="col-md-5">
+															<legend>
+																<h:outputText value="Supply Information" />
+															</legend>
+															<div class="line-content"></div>
+
+															<!-- BOOK TYPE -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="booktype" value="Book Type:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:selectOneMenu id="booktype" name="booktype"
+																		class="form-control input-sm"
+																		value="#{books.bookType}">
+																		<f:selectItem itemLabel="Hard Cover" itemValue="0" />
+																		<f:selectItem itemLabel="Hard Cover / eBook" itemValue="1" />
+																		<f:selectItem itemLabel="Soft Cover" itemValue="2" />
+																		<f:selectItem itemLabel="Soft Cover / eBook" itemValue="3" />
+																		<f:selectItem itemLabel="eBook" itemValue="4" />
+																	</h:selectOneMenu>
+															    </div>
+															</div>
+
+															<!-- BOOK FORMAT -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="bookformat" value="Book Format:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:selectOneMenu id="bookformat" name="bookformat"
+																		class="form-control input-sm"
+																		value="#{books.bookFormat}">
+																		<f:selectItem itemLabel="EPUB" itemValue="0" />
+																		<f:selectItem itemLabel="MOBI" itemValue="1" />
+																		<f:selectItem itemLabel="PDF" itemValue="2" />
+																		<f:selectItem itemLabel="TXT" itemValue="3" />
+																		<f:selectItem itemLabel="DJVU" itemValue="4" />
+																	</h:selectOneMenu>
+																</div>
+															</div>
+
+															<!-- COPIES  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="bookcopies" value="Copies:" />
+																<div class="col-xs-2 input-group-sm">
+																	<h:inputText id="bookcopies" name="bookcopies"
+																		class="form-control" value="#{books.copies}"
+																		required="true">
+																		<f:validateDoubleRange minimum="1" maximum="1000" />
+																		<f:ajax event="blur" render="bookcopiesError" />
+																	</h:inputText>
+																</div>
+																<h:message id="bookcopiesError" for="bookcopies"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- WHOLESALE PRICE  -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="wholesaleprice" value="Wholesale Price:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:inputText id="wholesaleprice" name="wholesaleprice"
+																		class="form-control" value="#{books.wholesalePrice}"
+																		required="true">
+																		<f:validateDoubleRange minimum="1" maximum="1000" />
+																	</h:inputText>
+																</div>
+																<h:message id="wholesalepriceError" for="wholesaleprice"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- LIST PRICE -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="listprice" value="List Price:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:inputText id="listprice" name="listprice"
+																		class="form-control" value="#{books.listPrice}"
+																		required="true">
+																		<f:validateDoubleRange minimum="1" maximum="1000" />
+																	</h:inputText>
+																</div>
+																<h:message id="listpriceError" for="listprice"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- SALE PRICE -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="saleprice" value="Sale Price:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:inputText id="saleprice" name="saleprice"
+																		class="form-control" value="#{books.salePrice}"
+																		required="true">
+																		<f:validateDoubleRange minimum="0" maximum="1000" />
+																	</h:inputText>
+																</div>
+																<h:message id="salepriceError" for="saleprice"
+																	class="inputErrorModal" />
+															</div>
+
+
+															<!-- WEIGHT -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="bookweight" value="Weight:" />
+																<div class="col-xs-3 input-group-sm">
+																	<h:inputText id="bookweight" name="bookweight"
+																		class="form-control" value="#{books.weight}"
+																		required="true">
+																		<f:validateDoubleRange minimum="1" maximum="1000" />
+																	</h:inputText>
+																</div>
+																<h:message id="bookweightError" for="bookweight"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- DIMENSION -->
+															<div class="form-group">
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="dimensions" value="Dimensions:" />
+																<div class="col-xs-4 input-group-sm">
+																	<h:inputText id="dimensions" name="dimensions"
+																		class="form-control" value="#{books.dimensions}"
+																		required="true">
+																		<f:ajax event="blur" render="dimensionsError" />
+																	</h:inputText>
+																</div>
+																<h:message id="dimensionsError" for="dimensions"
+																	class="inputErrorModal" />
+															</div>
+
+															<!-- AVAILABILITY -->
+															<div class="form-group">
+																<h:message class="help-block" for="availability" />
+																<h:outputLabel class="col-xs-3 control-label"
+																	for="availability" value="Available:"
+																	style="text-align:left;" />
+																<div class="col-xs-4 input-group-sm">
+																	<h:selectOneMenu id="availability" name="availability"
+																		class="form-control input-sm"
+																		value="#{books.available}">
+																		<f:selectItem itemLabel="Available" itemValue="A" />
+																		<f:selectItem itemLabel="Not Available" itemValue="NA" />
+																	</h:selectOneMenu>
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</div>
+
+												<div class="modal-footer">
+													<h:commandButton value="Update" class="btn btn-bookoo"
+														action="#{bookAction.checkEditBook(books)}" />
+												</div>
+
+											</h:form>
+										</div>
+									</div>
+								</div>
+							</h:column>
+							</h:dataTable>
+								<div class="modal fade modalinventory" id="inventory"
+								tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+								aria-hidden="true">
+
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<h:form class="form-horizontal" id="userForm2">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">
+													<i class="fa fa-times bookoo-times"></i>
+												</button>
+												<legend>
+													<h:outputText value="Add a Book" />
+												</legend>
+											</div>
+
+											<div class="modal-body">
+												<div class="row">
+													<div class="col-md-7">
+														<legend>
+															<h:outputText value="Book Information" />
+														</legend>
+														<div class="line-content"></div>
+
+														<!-- ISBN 10  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label"
+																for="isbn10" value="ISBN-10:" />
+															<div class="col-xs-4 input-group-sm">
+																<h:inputText id="isbn10" name="isbn10"
+																	class="form-control" value="#{bookBean.isbn10}"
+																	validator="#{bookBean.validateISBN10}" required="true">
+
+																	<f:ajax event="blur" render="isbn10Error" />
+																</h:inputText>
+															</div>
+															<h:message id="isbn10Error" for="isbn10"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- ISBN 13  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label"
+																for="isbn13" value="ISBN-13:" />
+															<div class="col-xs-4 input-group-sm">
+																<h:inputText id="isbn13" name="isbn13"
+																	class="form-control" value="#{bookBean.isbn13}"
+																	validator="#{bookBean.validateISBN13}" required="true">
+
+																	<f:ajax event="blur" render="isbn13Error" />
+																</h:inputText>
+															</div>
+															<h:message id="isbn13Error" for="isbn13"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- TITLE  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="title"
+																value="Title:" />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="title" name="title"
+																	class="form-control" value="#{bookBean.title}"
+																	validator="#{bookBean.validateTitle}" required="true">
+
+																	<f:ajax event="blur" render="titleError" />
+																</h:inputText>
+															</div>
+															<h:message id="titleError" for="title"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- AUTHOR  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label"
+																for="author" value="Author:" />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="author" name="author"
+																	class="form-control" value="#{bookBean.author}"
+																	validator="#{bookBean.validateAuthor}" required="true">
+
+																	<f:ajax event="blur" render="authorError" />
+																</h:inputText>
+															</div>
+															<h:message id="authorError" for="author"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- PUBLISHER  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label"
+																for="publisher" value="Publisher:" />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="publisher" name="publisher"
+																	class="form-control" value="#{bookBean.publisher}"
+																	validator="#{bookBean.validatePublisher}"
+																	required="true">
+
+																	<f:ajax event="blur" render="publisherError" />
+																</h:inputText>
+															</div>
+															<h:message id="publisherError" for="publisher"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- PAGES  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="pages"
+																value="Pages:" />
+															<div class="col-xs-2 input-group-sm">
+																<h:inputText id="pages" name="pages"
+																	class="form-control" value="#{bookBean.pages}"
+																	required="true">
+																	<f:validateDoubleRange minimum="10" maximum="10000" />
+																	<f:ajax event="blur" render="pagesError" />
+																</h:inputText>
+															</div>
+															<h:message id="pagesError" for="pages"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- GENRE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="genre"
+																value="Genre:" />
+															<div class="col-xs-4 input-group-sm">
+																<h:selectOneMenu id="genre" name="genre"
+																	class="form-control input-sm" value="#{bookBean.genre}">
+																	<f:selectItem itemLabel="Children" itemValue="Children" />
+																	<f:selectItem itemLabel="Science-Fiction"
+																		itemValue="Sci Fiction" />
+																	<f:selectItem itemLabel="Thriller" itemValue="Thriller" />
+																	<f:selectItem itemLabel="Young Adult"
+																		itemValue="Young Adult" />
+																	<f:selectItem itemLabel="Classic" itemValue="Classic" />
+																</h:selectOneMenu>
+															</div>
+															<h:message id="genreError" for="genre"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- LINK  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-2 control-label" for="link"
+																value="Link:" />
+															<div class="col-xs-5 input-group-sm">
+																<h:inputText id="link" name="link" class="form-control"
+																	value="#{bookBean.downloadLink}"
+																	validator="#{bookBean.validateDownloadLink}"
+																	required="true">
+																	<f:ajax event="blur" render="pagesError" />
+																</h:inputText>
+															</div>
+															<h:message id="linkError" for="link"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- COVER -->
+														<div class="form-group">
+															<h:message class="help-block" for="cover" />
+															<h:outputLabel class="col-xs-2 control-label" for="cover"
+																value="Cover:" />
+															<div class="col-xs-2 input-group-sm">
+																<rich:fileUpload addControlLabel="upload"
+																	fileUploadListener="#{fileUpload.listenerBook}"
+																	acceptedTypes="jpg,jpeg,gif,png"
+																	ontyperejected="alert('Only JPG, GIF, PNG and BMP files are accepted');"
+																	maxFilesQuantity="1" listHeight="10" listWidth="50"
+																	required="true" />
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-5">
+														<legend>
+															<h:outputText value="Supply Information" />
+														</legend>
+														<div class="line-content"></div>
+
+														<!-- BOOK TYPE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="booktype" value="Book Type:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:selectOneMenu id="booktype" name="booktype"
+																	class="form-control input-sm"
+																	value="#{bookBean.bookType}">
+																	<f:selectItem itemLabel="Hard Cover" itemValue="0" />
+																	<f:selectItem itemLabel="Hard Cover / eBook" itemValue="1" />
+																	<f:selectItem itemLabel="Soft Cover" itemValue="2" />
+																	<f:selectItem itemLabel="Soft Cover / eBook" itemValue="3" />
+																	<f:selectItem itemLabel="eBook" itemValue="4" />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+														<!-- BOOK FORMAT -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="bookformat" value="Book Format:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:selectOneMenu id="bookformat" name="bookformat"
+																	class="form-control input-sm"
+																	value="#{bookBean.bookFormat}">
+																	<f:selectItem itemLabel="EPUB" itemValue="0" />
+																	<f:selectItem itemLabel="MOBI" itemValue="1" />
+																	<f:selectItem itemLabel="PDF" itemValue="2" />
+																	<f:selectItem itemLabel="TXT" itemValue="3" />
+																	<f:selectItem itemLabel="DJVU" itemValue="4" />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+														<!-- COPIES  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="bookcopies" value="Copies:" />
+															<div class="col-xs-2 input-group-sm">
+																<h:inputText id="bookcopies" name="bookcopies"
+																	class="form-control" value="#{bookBean.copies}"
+																	required="true">
+																	<f:validateDoubleRange minimum="1" maximum="1000" />
+																	<f:ajax event="blur" render="bookcopiesError" />
+																</h:inputText>
+															</div>
+															<h:message id="bookcopiesError" for="bookcopies"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- WHOLESALE PRICE  -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="wholesaleprice" value="Wholesale Price:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:inputText id="wholesaleprice" name="wholesaleprice"
+																	class="form-control" value="#{bookBean.wholesalePrice}"
+																	required="true">
+																	<f:validateDoubleRange minimum="1" maximum="1000" />
+																	<f:ajax event="blur" render="wholesalepriceError" />
+																</h:inputText>
+															</div>
+															<h:message id="wholesalepriceError" for="wholesaleprice"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- LIST PRICE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="listprice" value="List Price:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:inputText id="listprice" name="listprice"
+																	class="form-control" value="#{bookBean.listPrice}"
+																	required="true">
+																	<f:validateDoubleRange minimum="1" maximum="1000" />
+																	<f:ajax event="blur" render="listpriceError" />
+																</h:inputText>
+															</div>
+															<h:message id="listpriceError" for="listprice"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- SALE PRICE -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="saleprice" value="Sale Price:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:inputText id="saleprice" name="saleprice"
+																	class="form-control" value="#{bookBean.salePrice}"
+																	required="true">
+																	<f:validateDoubleRange minimum="0" maximum="1000" />
+																	<f:ajax event="blur" render="salepriceError" />
+																</h:inputText>
+															</div>
+															<h:message id="salepriceError" for="saleprice"
+																class="inputErrorModal" />
+														</div>
+
+
+														<!-- WEIGHT -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="bookweight" value="Weight:" />
+															<div class="col-xs-3 input-group-sm">
+																<h:inputText id="bookweight" name="bookweight"
+																	class="form-control" value="#{bookBean.weight}"
+																	required="true">
+																	<f:validateDoubleRange minimum="1" maximum="1000" />
+																	<f:ajax event="blur" render="bookweightError" />
+																</h:inputText>
+															</div>
+															<h:message id="bookweightError" for="bookweight"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- DIMENSION -->
+														<div class="form-group">
+															<h:outputLabel class="col-xs-3 control-label"
+																for="dimensions" value="Dimensions:" />
+															<div class="col-xs-4 input-group-sm">
+																<h:inputText id="dimensions" name="dimensions"
+																	class="form-control" value="#{bookBean.dimensions}"
+																	required="true">
+																	<f:ajax event="blur" render="dimensionsError" />
+																</h:inputText>
+															</div>
+															<h:message id="dimensionsError" for="dimensions"
+																class="inputErrorModal" />
+														</div>
+
+														<!-- AVAILABILITY -->
+														<div class="form-group">
+															<h:message class="help-block" for="availability" />
+															<h:outputLabel class="col-xs-3 control-label"
+																for="availability" value="Available:"
+																style="text-align:left;" />
+															<div class="col-xs-4 input-group-sm">
+																<h:selectOneMenu id="availability" name="availability"
+																	class="form-control input-sm"
+																	value="#{bookBean.available}">
+																	<f:selectItem itemLabel="Available" itemValue="A" />
+																	<f:selectItem itemLabel="Not Available" itemValue="NA" />
+																</h:selectOneMenu>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<h:commandButton value="Add" class="btn btn-bookoo"
+													action="#{bookAction.checkAddBook}" />
+											</div>
+										</h:form>
+									</div>
+								</div>
+							</div>		
+						</div>
+					</div>
+					<!-- End of right column col-md-10 -->
+				</div>
+				<!-- Row -->
+
+			</div>
+			<!-- Container -->
+
+
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

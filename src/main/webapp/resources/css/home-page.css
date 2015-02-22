@@ -1,0 +1,83 @@
+.col-md-12 {
+	padding: 0;
+	border-radius: 10px;
+}
+
+h3.subtitle {
+	margin: 0;
+	padding: 0;
+	padding: 15px 0 0 20px;
+}
+
+/** Plug-in for book cover scroll **/
+.owl-carousel {
+	padding: 20px;
+	color: black;
+}
+
+.bookWrapper {
+	padding: 10px;
+	border-left: solid 1px #ccc;
+	text-align: center;
+	font-size: 13px;
+	color: #666;
+}
+
+.bookWrapper h5 {
+	margin-bottom: 2px;
+	font-size: 15px;
+}
+
+.bookWrapper h4 {
+	margin-top: 2px;
+}
+
+
+.bookThumbnail {
+	position:relative;
+	display: block;
+	margin: 0 auto;
+	width:150px;
+	height:200px;
+}
+
+.rating {
+	display:none;
+	position: absolute;
+	width: 85px;	
+	top: 5px;
+	left: 35px;
+}
+
+/** RSS Styling **/
+
+#carousel-rss, #carousel-rss div {
+	padding: 0;
+	margin: 0;
+}
+
+.rssWrapper { padding: 20px; }
+
+#rssTitle { 
+	color:#ecbf00;
+	color: #666;
+}
+#rssTitle:hover {text-decoration:underline; }
+#rssDescription { 
+	padding: 5px;
+	color: #888; 
+}
+#read-more
+{
+	color:#ecbf00;
+	padding: 0 5px;
+}
+#read-more:hover {text-decoration:underline; }
+
+#rssAuthor { 
+	font-style:italic;
+	text-align: right;
+	margin-right: 30px; 
+	color: #666;
+}
+#rssLink {}

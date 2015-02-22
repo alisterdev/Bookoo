@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="search" value="#{clientAction.search}"></f:viewParam>
+	<f:viewParam name="by" value="#{clientAction.type}"></f:viewParam>
+</f:metadata>
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+
+						<h3>#{msgs_client.Title}</h3>
+						<div class="line-content"></div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<o:form id="clientSearchForm" includeRequestParams="true">
+									<h:commandButton class='hide'
+										action="clientsSearch?faces-redirect=true&amp;includeViewParams=true" />
+
+									<div class="input-group">
+
+										<span class="input-group-addon"> 
+											<h:commandLink
+												action="clientsSearch?faces-redirect=true&amp;includeViewParams=true">
+												<i class="fa fa-search"></i>
+											</h:commandLink>
+										</span>
+
+										<h:inputText name="searchParam" class="searchbar form-control"
+											value="#{clientAction.search}"
+											placeholder="Search for clients...">
+											<f:param name="search" value="" />
+										</h:inputText>
+
+										<div class="input-group-btn search-type">
+											<button type="button"
+												class="btn btn-default dropdown-toggle search-dropdown"
+												data-toggle="dropdown">
+												ID <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="">ID</a></li>
+												<li><a href="">First Name</a></li>
+												<li><a href="">Last Name</a></li>
+												<li><a href="">User Name</a></li>
+												<h:inputHidden id="type" name="type"
+													value="#{clientAction.type}" />
+											</ul>
+										</div>
+									</div>
+
+								</o:form>
+							</div>
+						</div>
+						
+						<br/>
+						<h:outputFormat value="We have found {0} result(s):">
+								<f:param value="#{clientAction.clientList.size()}"/>
+						</h:outputFormat>
+							
+						<!-- SEARCH RESULTS -->
+						<h:dataTable value="#{clientAction.clientList}" rendered="#{not empty clientAction.clientList}" var="client"
+							styleClass="table table-hover table-striped" >
+							<h:column>
+								<f:facet name="header">#{msgs_client.Id}</f:facet>
+				               	#{client.id}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.Username}</f:facet>
+				               #{client.username}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.ClientTitle}</f:facet>
+				               #{client.title}              
+				               #{client.firstName}
+				               #{client.lastName}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.CompanyName}</f:facet>
+				               #{client.companyName}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Address</f:facet>
+								<h:outputText value="#{client.address1}"></h:outputText>
+								<br />
+								<h:outputText value="#{client.city}, #{client.province}"></h:outputText>
+								<br />
+								<h:outputText value="#{client.country} #{client.postalCode}"></h:outputText>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">#{msgs_client.PhoneNumber}</f:facet>
+				               #{client.phoneNumber}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.CellNumber}</f:facet>
+				               #{client.cellNumber}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_client.Email}</f:facet>
+				               #{client.email}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Client Value</f:facet>
+								<h:outputText value="#{reportsAction.getClientValue(client)}">
+									<f:convertNumber type="currency" minFractionDigits="2" maxFractionDigits="2"></f:convertNumber>
+								</h:outputText>
+							</h:column>
+						</h:dataTable>
+					</div>
+				</div>
+			</div>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

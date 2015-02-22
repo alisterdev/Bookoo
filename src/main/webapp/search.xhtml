@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<f:metadata>
+	<f:viewParam name="search" value="#{bookSearch.search}"></f:viewParam>
+	<f:viewParam name="by" value="#{bookAction.type}"></f:viewParam>
+</f:metadata>
+
+<ui:composition template="/WEB-INF/templates/generaltemplate.xhtml">
+	<ui:define name="content">
+
+		<h:body styleClass="body">
+			<h:outputStylesheet library="css" name="search-page.css"></h:outputStylesheet>
+
+			<div class="container main-content">
+				<div class="row">
+					<!-- MENU -->
+					<o:form includeRequestParams="true" id="searchPage">
+					<br/><br/>
+						<div class="col-md-2 option_book_result sm-screen-hide">
+
+							<b>#{msgs_search.Category}</b><br/>
+							<div class="table_choice_option_result">
+							<ul>
+								<ui:repeat var="genre" value="#{genreBean.allGenres}">
+								
+									<li>
+										<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=#{genre.genre}&amp;by=Genre">
+											<c:set var="key" value="#{genre.genre}" />
+											<h:outputText value="#{msgs_header[key]}" />
+										</h:outputLink>
+									</li>
+								</ui:repeat>
+							</ul>
+							</div>
+							
+							<br /> <b>Format</b><br/>
+							<div class="table_choice_option_result">
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=0&amp;by=Cover">
+									<h:outputText value="#{msgs_book.hard_cover}" />
+								</h:outputLink>
+								<br /> 
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=2&amp;by=Cover">
+									<h:outputText value="#{msgs_book.soft_cover}" />
+								</h:outputLink>
+								<br /> 
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=4&amp;by=Cover">
+									<h:outputText value="#{msgs_book.ebook}" />
+								</h:outputLink>
+
+							</div>
+							<br /> <b>#{msgs_search.Prices}</b> <br/>
+							<div class="table_choice_option_result">
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=10&amp;by=Price">
+									<h:outputText value="#{msgs_search.Under_10$}" />
+								</h:outputLink>
+								<br/>
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=20&amp;by=Price">
+									<h:outputText value="#{msgs_search.Under_20$}" />
+								</h:outputLink>
+								<br/>
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=30&amp;by=Price">
+									<h:outputText value="#{msgs_search.Under_30$}" />
+								</h:outputLink>
+								<br/>
+								<h:outputLink value="#{request.contextPath}/faces/search.xhtml?search=31&amp;by=Price">
+									<h:outputText value="#{msgs_search.Above_30$}" />
+								</h:outputLink>
+
+							</div>
+						</div>
+					</o:form>
+
+					<!-- END MENU -->
+
+					<o:form includeRequestParams="true">
+						<h:inputHidden id="searchBy" name="searchBy"
+							value="#{bookAction.type}" />
+						<div class="col-md-10 book_printed_result" id="resultList">
+							<div class="row header"> 
+								<!-- header row -->
+								<h2 class="header-title">#{msgs_search.results}</h2>
+								<div class="line-content"></div>
+							</div>
+							<h:outputFormat value="#{msgs_search.find}">
+								<f:param value="#{bookAction.booksList.size()}" />
+							</h:outputFormat>
+							
+							<div class="row">
+								<ui:repeat var="book" value="#{bookAction.booksList}">
+									<div class="search-result">
+										<div class="book-thumbnail">
+											<h:outputLink id="bookLink" value="book.xhtml">
+												<f:param name="bookId" value="#{book.id}" />
+												<h:graphicImage class="bookThumbnail"
+													value="resources/img/covers/#{book.cover}"
+													alt="Book Thumbnail" />
+											</h:outputLink>
+										</div>
+										<div class="book-info">
+											<h:outputLink style="text-decoration:none" value="book.xhtml"><h3>
+												<f:param name="bookId" value="#{book.id}" />
+												<h:outputText value="#{book.title}" />
+											</h3></h:outputLink>
+											<p><h:outputText value="by #{book.author}" /></p>
+											<h:outputText value="$#{book.wholesalePrice}" />
+											<h:outputText style="color:#ccc;font-style:italic;" value=" - Out of stock" disabled="true" rendered="#{not book.available}"/>
+										</div>
+									</div>
+									<hr/>									
+								</ui:repeat>
+							</div>
+						</div>
+					</o:form>
+				</div>
+				<!-- End of global row -->
+
+			</div>
+		</h:body>
+
+	</ui:define>
+</ui:composition>
+</html>

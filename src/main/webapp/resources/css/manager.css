@@ -1,0 +1,206 @@
+/*********************************************************
+** BOOKOO CSS Styling for Manager Side  **
+** by Alex Ilea / Darrel-Day Guerrero **
+** Bookoo Bookstore. Copyright 2014. 					**
+*********************************************************/
+
+/* GENERIC STYLES FOR DATA TABLES */
+
+
+.management-title {
+	padding: 50px 40px;
+	font-size: 20px;
+	color: #fff;
+	float:left;
+		
+}
+
+.table a {
+  color: #666;
+  font-size: 12px;
+  -webkit-transition: color 300ms ease-out;
+  -moz-transition: color 300ms ease-out;
+  -o-transition: color 300ms ease-out;
+  -ms-transition: color 300ms ease-out;
+  transition: color 300ms ease-out;
+}
+.table a:hover { color: #ecbf00; }
+.table > tbody > tr > td { text-align: center; }
+
+.list-unstyled a{
+  color: #666;
+  -webkit-transition: color 300ms ease-out;
+  -moz-transition: color 300ms ease-out;
+  -o-transition: color 300ms ease-out;
+  -ms-transition: color 300ms ease-out;
+  transition: color 300ms ease-out;
+}
+
+.list-unstyled a:hover { color: #ecbf00; }
+
+.nav { font-family: 'Raleway', sans-serif; }
+
+/** Left Navigation Bar **/ 
+
+.header .header-title {
+  color: #666666;
+  font-size: 30px;
+  font-weight: 300;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family:'Raleway', sans-serif;
+}
+.header .header-info {
+  color: #888888;
+  font-size: 14px;
+  font-weight: 300;
+  padding-left: 2px;
+}
+
+.main-content {
+  padding: 15px 15px 55px 15px;
+}
+
+.help-content {
+  padding: 15px 15px 55px 15px;
+  border-top: solid 1px #f0ad4e;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  color: #666;
+}
+
+.table>thead>tr>th {border: 0;}
+
+td {
+  text-align: left;
+  font-size: 12px;
+}
+
+td > ul > li{
+  font-size: 10px;
+}
+
+th {
+  text-align: center;
+  font-size: 12px;
+}
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 2;
+  color: #888888;
+  cursor: default;
+  background-color: #ecbf00;
+  border-color: #ecbf00;
+}
+
+.pagination a {
+  color: #888888;
+  text-decoration: none;
+}
+
+a {
+  color: #888888;
+  text-decoration: none;
+}
+
+#clients-list td {
+	padding: 5px;
+}
+
+.bookoo {
+	color:#ecbf00;
+}
+
+/* FORM MODAL */
+
+.modal-content, .modal-dialog
+{
+	margin: 0;
+	padding: 0;
+	width: 500px;
+	height: auto;
+}
+
+.modal-body
+{	
+	width: auto;
+	height: auto;
+}
+
+.modal-footer{
+	margin-left: 50px;
+}
+
+.modalclient{
+	width: 1200px;
+	font-size: 10px;
+	height: auto;
+	margin: auto auto;
+	overflow: auto;
+	overflow-y: scroll;
+}
+
+.modalrss{
+	width: 600px;
+	font-size: 10px;
+	height: auto;
+	margin: auto auto;
+	overflow:hidden;
+}
+
+.modalinventory{
+	width: 1000px;
+	font-size: 10px;
+	height: auto;
+	margin: auto auto;
+	 overflow: auto;
+	 overflow-y: scroll;
+	text-align:left;
+}
+
+
+#inventory:hover, 
+#inventory:focus,
+#inventory:active
+{
+	outline: 0;
+	border: 0;
+}
+
+.modal legend
+{
+	font-size: 16px;
+	font-family: 'Raleway', sans-serif;
+	text-align: center;
+	border: 0;
+	margin-bottom:0;
+}
+
+
+#inventory h5
+{
+	margin: 3px;
+	color: #999;
+	font-size: 12px;
+}
+
+#searchBookForm { margin:10px;}
+
+  
+.bookThumbnailMini {
+	width: 75px;
+	height: 100px	
+}
+
+.critical
+{
+	color: red;
+}

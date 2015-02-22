@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/managertemplate.xhtml">
+	<ui:define name="content">
+		<h:body styleClass="body">
+			<div class="container">
+				<div class="row">
+					<ui:insert name="sidebarLeft">
+						<ui:include src="/WEB-INF/templates/managernavbar.xhtml" />
+					</ui:insert>
+					<!-- TABLE / REPORTS SECTION -->
+					<div class="col-md-10">
+						<h2 class="header-title">Inventory Stock Report</h2>
+						<p class="header-info">Here is the current inventory status</p>
+						<div class="line-content"></div>
+								
+						<!-- SUMMARY -->
+						<h5>Summary</h5>
+						<h:dataTable value="#{reportsAction.inventoryValue}" var="value" styleClass="table table-hover table-striped" >
+							<h:column> 
+								<f:facet name="header">Wholesale Value</f:facet> 
+								#{value[0]} 
+							</h:column> 
+							<h:column> 
+								<f:facet name="header">List Price Value</f:facet> 
+								#{value[1]} 
+							</h:column> 
+						</h:dataTable>
+						
+						<!-- DETAILS -->
+						<h5>#{msgs_top.TotalSalesSubTitle1}</h5>
+						<h:dataTable value="#{reportsAction.inventoryReport}" var="book" styleClass="table table-hover table-striped" >
+				            <h:column>
+								<f:facet name="header">ISBN 10</f:facet>
+				               	#{book.isbn10}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">#{msgs_top.title}</f:facet>
+								<h:outputLink value="#{request.contextPath}/faces/book.xhtml?bookId=#{book.id}" target="_blank">#{book.trimmedTitle}</h:outputLink>
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Copies</f:facet>
+				               	#{book.copies}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">Wholesale Price</f:facet>
+				               	#{book.wholesalePrice}
+				            </h:column>
+							<h:column>
+								<f:facet name="header">List Price</f:facet>
+				               	#{book.listPrice}
+				            </h:column>
+				       	</h:dataTable>
+				       	
+				      </div>
+			     </div>
+		     </div>
+			</h:body>
+		</ui:define>
+	</ui:composition>
+</html>
